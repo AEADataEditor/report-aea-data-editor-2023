@@ -1,0 +1,709 @@
+---
+title: "AEA Annual Report Yearly"
+author: "Stuti Goyal"
+date: "2023-11-22"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+library(janitor)
+library(dataverse)
+library(ggplot2)
+library(qdapRegex)
+library(here)
+library(digest)
+
+# dynamically set directory
+basedir <- here::here()
+
+# configure some placeholders
+
+dv.fileid <- 8149625
+dv.doi    <- "DVN/8YNXVW"
+
+# directories 
+
+outputs  <- file.path(basedir,"Output")
+data     <- file.path(basedir,"Data")
+
+
+for ( dir in list(outputs,data)){
+  if (file.exists(dir)){
+  } else {
+    dir.create(file.path(dir))
+  }
+}
+
+# convenience functions outsourced...
+
+source(file.path(basedir,"Scripts","00_functions.R"))
+
+# For graphing
+
+evenbreaks = c(2014, 2016, 2018, 2020, 2022)
+oddbreaks = c(2013, 2015, 2017, 2019, 2021, 2023)
+
+
+# file names
+
+rct.file.local <- file.path(data,"trials.Rds")
+rct.file.chk256 <- "d7f5f31080f3d4b6dc0c347ad9be9f5c2a508c3178c469259f2abc35ec168985"
+
+```
+
+```{r, message=TRUE}
+
+if ( file.exists(rct.file.local)) {
+  message(paste0("Using local file ",rct.file.local))
+  aea_orig <- readRDS(file=rct.file.local)
+
+} else {
+   aea_orig <- get_dataframe_by_id(file = dv.fileid,
+                             server = "dataverse.harvard.edu",
+                             .f = read.csv, original = T )
+   saveRDS(aea_orig,file=rct.file.local)
+}
+
+rct.test.chksum <- digest(rct.file.local,algo="sha256")
+message(paste0("SHA256: ",rct.test.chksum))
+if ( rct.test.chksum != rct.file.chk256) {
+  warning("Checksum is not equal to config")
+}
+
+## Yearwise Visualisations
+```
+
+```{r, message = FALSE}
+#aea_data <- read_csv("../Data/trials_2023.csv") %>% 
+#  janitor::clean_names()
+```
+
+```{r}
+aea_data <- clean_names(aea_orig)
+```
+
+
+```{r}
+current_year <- 2024
+file_year <- 2023
+```
+
+## Data Wrangling
+
+```{r}
+aea_data_year <- aea_data %>% 
+  mutate(first_registered_on = as.Date(first_registered_on, format = "%Y-%m-%d")) %>% 
+  mutate(first_registered_on = str_replace(first_registered_on, "00", "20" )) %>% 
+  mutate(first_registered_year = format(as.Date(first_registered_on), "%Y"))
+```
+
+
+```{r}
+year_cnt <- aea_data_year %>% 
+  group_by(first_registered_year) %>% 
+  summarise(cnt = n()) %>% 
+  ungroup()
+```
+
+
+
+# Creating data set with month and year
+
+```{r}
+aea_year_month <- aea_data_year %>% 
+  mutate(
+    first_month_year = format(as.Date(first_registered_on), "%Y-%m"),
+    first_month = format(as.Date(first_registered_on), "%m")
+  )
+```
+
+```{r}
+# Creating variable to reflect month (used for cumulative count predictions)
+aea_year_month <- aea_data_year %>% 
+  mutate(
+    first_month_year = format(as.Date(first_registered_on), "%m-%Y"),
+    first_month = format(as.Date(first_registered_on), "%m")
+  )
+```
+
+# Creating counts of registrations by year
+```{r}
+year_cnt <- aea_year_month %>% 
+  group_by(first_registered_year) %>% 
+  summarise(cnt_yr = n()) %>% 
+  ungroup() 
+
+#Data set of counts by year (excluding the current year)
+year_wo_current <- year_cnt %>% 
+  filter(first_registered_year != current_year)
+```
+
+
+
+```{r}
+year_cnt
+```
+
+### Summary of code
+
+In this section, the data has been loaded through the API, following which, the first registered year and month were extracted from the variable `first_registered_on`; these variables are called `first_registered_year` and `first_month`, respectively. After this, I created a dataset which summarizes the total number of registrations for each year. I also created a dataset with these counts, but without the observations for 2023 to facilitate the predictions below.
+
+## Predictions for total counts
+
+```{r}
+cnt_lm <- lm(cnt_yr ~ as.numeric(first_registered_year), data = year_wo_current) 
+summary(cnt_lm)
+```
+
+```{r}
+# Creating data frame with prediction for current year
+years <- data.frame(first_registered_year = c(current_year))
+
+pred_cnt_current <- data.frame(year = c(current_year - 1, current_year), cnt = c(year_cnt$cnt_yr[year_cnt$first_registered_year == as.character(current_year - 1)], predict(cnt_lm, years)))
+```
+
+
+```{r}
+min_year <- as.numeric(min(aea_data_year$first_registered_year))
+outputs <- "../Output"
+
+year_wo_current %>% 
+  mutate(first_registered_year = as.numeric(first_registered_year)) %>% 
+  ggplot(aes(x = first_registered_year, y = cnt_yr)) +
+  geom_line(color = "olivedrab4") +
+  geom_text(aes(label = cnt_yr), color = "olivedrab4", position = position_nudge(y = -2), vjust = -0.9) +
+  geom_line(aes(x = year, y = cnt), data = pred_cnt_current, linetype = "dashed", color = "olivedrab4") +
+  geom_point(aes(x = year, y = cnt), data = pred_cnt_current, color = "olivedrab4") +
+  geom_point(color = "olivedrab4") +
+  scale_x_continuous(
+    name = "Year",
+    limits = c(min_year, current_year), breaks = seq(min_year, current_year, 2))+
+  scale_y_continuous(
+    breaks = seq(0, 1500, 250)
+  ) +
+  labs(title = NULL, y = NULL) +
+  theme(
+    plot.title = element_blank(),
+    axis.title.y = element_blank()
+  )+
+  theme_minimal()
+
+ggsave(file.path(outputs, paste0("reg_pre_year_", file_year, ".pdf")),width=3.5,height=3.5,units="in")
+ggsave(file.path(outputs, paste0("reg_pre_year_", file_year, ".png")),width=3.5,height=3.5,units="in")
+
+num_regsyearly <- round(pred_cnt_current %>% filter(year == file_year) %>%
+                                      pull(cnt),0)
+
+ update_latexnums(paste0("regsyearly"), num_regsyearly)
+```
+
+
+### Summary of code
+
+In this section, I created a linear regression model to predict the total number of registrations in 2023, based on the year. For this, I used the dataset with the registration counts for each year (excluding 2023). I did this since the data reflected records until November of 2023, which means that using the existing data would be an inaccurate reflection of the number of registrations in 2023. Finally, I graphed the existing data and the predictions, with the prediction indicated by a dashed line.
+
+
+## Predictions for cumulative counts
+
+```{r}
+cnt_mnth_yr_current <- aea_year_month %>% 
+  filter(first_registered_year == as.character(current_year)) %>% 
+  group_by(first_month) %>% 
+  summarise(cnt = n()) %>% 
+  ungroup()
+```
+
+```{r}
+yr_cnt_no_current <- filter(year_cnt, first_registered_year != as.character(current_year))
+
+cum_cnt_no_current <- data.frame(
+  cum_cnt = cumsum(yr_cnt_no_current[, 2])
+  )
+
+cum_cnt_no_current <- cbind(yr_cnt_no_current[, 1], cum_cnt_no_current) 
+```
+
+```{r}
+years <- data.frame(first_registered_year = c(current_year))
+
+cnt_current <- data.frame(
+  "year" = c(current_year - 1, current_year),
+  "cnt" = c(
+    cum_cnt_no_current$cnt_yr[cum_cnt_no_current$first_registered_year == as.character(current_year-1)],
+    ( predict(cnt_lm, years)+ cum_cnt_no_current$cnt_yr[cum_cnt_no_current$first_registered_year == as.character(current_year-1)])
+  )
+)
+```
+
+
+```{r}
+cum_cnt_no_current %>% 
+  mutate(first_registered_year = as.numeric(first_registered_year)) %>% 
+  ggplot(mapping = aes(x = first_registered_year, y = cnt_yr)) +
+  geom_line(color = "olivedrab4") +
+  geom_point(color = "olivedrab4") +
+  geom_line(
+    data = cnt_current,
+    mapping = aes(x = year, y = cnt),
+    linetype = "dashed",
+    color = "olivedrab4"
+  ) +
+  geom_point(
+    data = cnt_current,
+    mapping = aes(x = year, y = cnt),
+    color = "olivedrab4"
+  ) +
+  geom_text(
+    aes(x = first_registered_year, y = cnt_yr, label = cnt_yr),
+    vjust = -0.9,
+    color = "olivedrab4"
+  ) +
+  scale_x_continuous(
+    limits = c(min_year, current_year), breaks = seq(min_year, current_year, 2))+
+  labs(title = NULL, y = NULL, x = "Year") +
+  theme(
+    plot.title = element_blank(),
+    axis.title.y = element_blank()
+  ) +
+  theme(legend.position = c(0.87, 0.25))+
+  theme_minimal() 
+
+
+num_regscumul <- round((cnt_current %>% filter(year == file_year) %>%
+                                      pull(cnt))/100,0)*100
+
+update_latexnums(paste0("regscumul"),num_regscumul)
+
+ggsave(file.path(outputs,paste0("reg_cumulative_", file_year, ".pdf")),width=3.5,height=3.5,units="in")
+ggsave(file.path(outputs,paste0("reg_cumulative_", file_year, ".png")),width=3.5,height=3.5,units="in")
+
+```
+
+
+## Predictions for pre vs post reg
+
+```{r}
+aea_data_year <- aea_data_year %>% 
+  mutate(intervention_start_date = as.Date(intervention_start_date, format = "%Y-%m-%d")) %>% 
+  mutate(intervention_start_date = str_replace(intervention_start_date, "00", "20" ))
+```
+
+
+```{r}
+pre_reg_cnt <- aea_data_year %>% 
+  mutate(pre_post = ifelse(first_registered_on < intervention_start_date, "pre_reg", "post_reg")) %>% 
+  group_by(first_registered_year, pre_post) %>% 
+  summarise(reg_cnt = n()) %>% 
+  ungroup() 
+
+pre_reg_no_current <- pre_reg_cnt %>% 
+  filter(first_registered_year != as.character(current_year))
+```
+
+
+```{r}
+pre_reg_lm <- lm(reg_cnt ~ as.numeric(first_registered_year) + pre_post, data = pre_reg_no_current)
+summary(pre_reg_lm)
+```
+
+```{r}
+years_reg <- data.frame(first_registered_year = c(current_year), pre_post = c("post_reg", "pre_reg"))
+
+reg_pred_current <- data.frame(
+  year = c(as.character(current_year-1), as.character(current_year-1), current_year, current_year), 
+  pre_post = c("pre_reg", "post_reg"),
+  cnt = c(
+    pre_reg_cnt$reg_cnt[pre_reg_cnt$first_registered_year == as.character(current_year-1) & pre_reg_cnt$pre_post == "pre_reg"],
+    pre_reg_cnt$reg_cnt[pre_reg_cnt$first_registered_year == as.character(current_year-1) & pre_reg_cnt$pre_post == "post_reg"],
+    predict(pre_reg_lm, years_reg))
+  )
+```
+
+```{r}
+pre_reg_no_current$first_registered_year <- as.numeric(pre_reg_no_current$first_registered_year)
+
+reg_pred_current$year <- as.numeric(reg_pred_current$year)
+
+ggplot(data = pre_reg_no_current, mapping = aes(x = first_registered_year, y = reg_cnt, color = pre_post)) +
+  geom_path(aes(group = pre_post)) +
+  geom_point() +
+  theme_minimal() +
+  geom_path(aes(x = year, y = cnt, color = pre_post, group = pre_post), data = reg_pred_current, linetype = "dashed") +
+  geom_point(aes(x = year, y = cnt, color = pre_post), data = reg_pred_current) +
+  geom_text(
+    data = filter(pre_reg_no_current, pre_post == "post_reg"),
+    aes(x = first_registered_year, y = reg_cnt, label = reg_cnt), vjust = -1, hjust = 0.75,
+    color = "olivedrab4"
+  ) +
+  geom_text(
+    data = filter(pre_reg_no_current, pre_post == "pre_reg"),
+    aes(x = first_registered_year, y = reg_cnt, label = reg_cnt), vjust = 1.5, hjust = 0.25,
+    color = "maroon"
+  ) +
+  scale_color_manual(
+    values = c("olivedrab4", "maroon")
+  ) +
+  labs(title = NULL, y = NULL, x = "Year") +
+  theme(
+    plot.title = element_blank(),
+    axis.title.y = element_blank()
+  ) +
+  scale_x_continuous( limits = c(min_year, current_year), 
+                      breaks = seq(min_year, current_year, 2))+
+  theme_minimal()+
+  theme(legend.position = c(0.87, 0.15))
+
+ggsave(file.path(outputs, paste0("post_pre_reg_", file_year, ".pdf")),width=3.5,height=3.5,units="in")
+ggsave(file.path(outputs, paste0("post_pre_reg_", file_year, ".png")),width=3.5,height=3.5,units="in")
+```
+
+
+## Predictions for pap vs total counts
+
+```{r}
+pap_cnt <- aea_data_year %>% 
+  filter(analysis_plan_documents != "None") %>% 
+  group_by(first_registered_year) %>% 
+  summarise(pap_cnt = n()) %>% 
+  cbind(year_cnt[, 2])
+
+pap_wo_current <- pap_cnt %>% 
+  filter(first_registered_year != current_year)
+```
+
+```{r}
+pap_lm <- lm(pap_cnt ~ as.numeric(first_registered_year), data = pap_wo_current)
+summary(pap_lm)
+```
+
+
+```{r}
+pap_lm <- lm(pap_cnt ~ as.numeric(first_registered_year), data = pap_wo_current)
+summary(pap_lm)
+```
+
+
+```{r}
+pap_reg <- data.frame(first_registered_year = c(current_year))
+
+pap_pred_current <- data.frame(
+  year = c(current_year-1, current_year),
+  pap_cnt = c(
+    pap_cnt$pap_cnt[pap_cnt$first_registered_year == as.character(current_year-1)],
+    predict(pap_lm, pap_reg)),
+  cnt_yr = c(
+    pap_cnt$cnt_yr[pap_cnt$first_registered_year == as.character(current_year-1)],
+    predict(cnt_lm, pap_reg))
+  )
+```
+
+```{r}
+pap_wo_current %>% 
+  mutate(first_registered_year = as.numeric(first_registered_year)) %>% 
+  ggplot() +
+  geom_line(aes(x = first_registered_year, y = pap_cnt, color = "PAP")) +
+  geom_point(aes(x = first_registered_year, y = pap_cnt, color = "PAP")) +
+  geom_line(
+    data = pap_pred_current,
+    mapping = aes(x = year, y = pap_cnt, color = "PAP"),
+    linetype = "dashed"
+  ) +
+  geom_point(
+    data = pap_pred_current,
+    mapping = aes(x = year, y = pap_cnt, color = "PAP")
+  ) +
+  geom_line(aes(x = first_registered_year, y = cnt_yr, color = "Total")) +
+  geom_point(aes(x = first_registered_year, y = cnt_yr, color = "Total")) +
+  geom_line(
+    data = pap_pred_current,
+    mapping = aes(x = year, y = cnt_yr, color = "Total"),
+    linetype = "dashed"
+  ) +
+  geom_point(
+    data = pap_pred_current,
+    mapping = aes(x = year, y = cnt_yr, color = "Total")
+  ) +
+  scale_color_manual(
+    values = c("Total" = "maroon", "PAP" = "olivedrab4")
+  ) +
+  theme_minimal() +
+  scale_x_continuous( limits = c(min_year, current_year), breaks = seq(min_year, current_year, 2))+
+  scale_y_continuous(
+    breaks = seq(0, 1500, 250)
+  ) +
+  scale_x_continuous(limits = c(min_year, current_year), breaks = seq(min_year, current_year, 2))+
+  labs(title = NULL, y = NULL, x = "Year", color = "Total Registrations \nand PAP") +
+  theme(
+    plot.title = element_blank(),
+    axis.title.y = element_blank()
+  ) +
+  geom_text(
+    aes(x = first_registered_year, y = pap_cnt, label = pap_cnt),
+    vjust = 1.5,
+    color = "olivedrab4"
+  ) +
+  geom_text(
+    aes(x = first_registered_year, y = cnt_yr, label = cnt_yr),
+    vjust = -0.6,
+    color = "maroon"
+  ) +
+  theme(legend.position = c(0.87, 0.15), legend.key.size = unit(0.25, 'cm'))
+  
+
+ggsave(file.path(outputs, paste0("pap_reg_", file_year, ".pdf")),width=3.5,height=3.5,units="in")
+ggsave(file.path(outputs, paste0("pap_reg_", file_year, ".png")),width=3.5,height=3.5,units="in")
+```
+
+
+
+## Predictions for percentage PAP
+
+```{r}
+pap_wo_current <- pap_wo_current %>% 
+  mutate(pap_percent = (pap_cnt / cnt_yr))
+
+pap_pred_current <- pap_pred_current %>% 
+  mutate(pap_percent = (pap_cnt / cnt_yr))
+```
+
+
+```{r}
+pap_wo_current %>% 
+  mutate(first_registered_year = as.numeric(first_registered_year)) %>%
+  ggplot() + 
+  geom_line(
+    mapping = aes(x = first_registered_year, y = pap_percent),
+    color = "olivedrab4"
+  ) + 
+  geom_point(
+    mapping = aes(x = first_registered_year, y = pap_percent),
+    color = "olivedrab4"
+  ) +
+  geom_line(
+    data = pap_pred_current,
+    mapping = aes(x = year, y = pap_percent),
+    linetype = "dashed",
+    color = "olivedrab4"
+  ) +
+  geom_point(
+    data = pap_pred_current,
+    mapping = aes(x = year, y = pap_percent),
+    color = "olivedrab4"
+  ) +
+  geom_text(
+    aes(x = first_registered_year, y = pap_percent, label = round(pap_percent * 100, 2)),
+    vjust = -1.85,
+    color = "olivedrab4"
+  ) +
+  labs(title = NULL, y = NULL, x = "Year") +
+  theme(
+    plot.title = element_blank(),
+    axis.title.y = element_blank()
+  ) +
+  scale_y_continuous(
+    labels = scales::percent,
+    limits = c(0, 0.5)
+  ) +
+  theme_minimal()+
+  scale_x_continuous(limits = c(min_year, current_year), 
+                     breaks = seq(min_year, current_year, 2))
+  
+
+ggsave(file.path(outputs, paste0("pap_per_reg_", file_year, ".pdf")) ,width=3.5,height=3.5,units="in")
+ggsave(file.path(outputs, paste0("pap_per_reg_", file_year, ".png")),width=3.5,height=3.5,units="in")
+```
+
+
+```{r}
+#### Functions:
+sep_help <- function(col, sep){
+  max <- 0
+  for (i in 1:length(col)){
+    if (is.na(col[i])){
+      next
+    }
+    iter <- str_count(col[i], sep)
+    if (iter > max){
+      max = iter
+    }
+    else{
+      next
+    }
+  }
+  return(max)
+}
+
+sep_ls <- function(col,sep,name){
+  num <- sep_help(col,sep)
+  num <- num + 1
+  nums <- 1:num
+  listy <-  paste(name, nums,sep = "")
+  return(listy)
+}
+better_sep <- function(df,col,sep,name){
+  names <- sep_ls(col,sep,name)
+  str <-deparse(substitute(col))
+  co <- sub(".*\\$", "",str)
+  new_df <- df %>%
+    separate(co, names, sep =sep)
+  return(new_df)
+}
+
+reshape_long <- function(df, var_name){
+  nms <- colnames(df)
+  end1 <- str_detect(nms,var_name)
+  end <- sum(end1 == TRUE)
+  vn <- paste(var_name,"1",sep = "")
+  pos <-match(vn, nms)
+  pos_min <- pos-1
+  nms <- nms[1:pos_min]
+  nms <- c(nms, var_name)
+  new_df <- data.frame(matrix(ncol= length(nms), nrow = 0))
+  colnames(new_df) <- nms
+  for (q in 1:nrow(df)){
+    iter <- df[q,]
+    bool <- sapply(df, is.na)[q,]
+    x<-1
+    e <- var_name
+    for (i in x:end){
+      y <- paste(e,i, sep = "")
+      if (bool[y] == TRUE){
+        break
+      }
+      else{
+        x = x+1
+      }
+    }
+    x = x-1
+    df_dup <- iter[rep(seq_len(nrow(iter)), each = x), ]
+    df_new <- data.frame(matrix(ncol= length(new_df), nrow = x))
+    df_new[,1:pos_min] <- df_dup[,1:pos_min]
+    colnames(df_new) <- nms
+    j = pos
+    for (k in 1:nrow(df_new)){
+      res <- as.character(df_dup[k,j])
+      df_new[k,pos] = res
+      j = j+1
+    }
+    new_df <- rbind(new_df, df_new)
+  }
+  return(new_df)
+}
+```
+
+
+
+```{r}
+years <- c(min_year, 2015,2017, 2022, file_year)
+cum_reg_users <- c(744,1778,3472,8255,12453)
+# adjust the partial 2023 number
+#avg = (cum_reg_users[5] - cum_reg_users[4])/(4*12+11)
+#cum_reg_users <- c(cum_reg_users,cum_reg_users[length(cum_reg_users)]+avg)
+df <- tibble(Year = years, Registered.users = cum_reg_users) %>%
+  mutate(label = as.character(Registered.users))
+
+registered.users.estimate = df %>% filter(Year==current_year) %>% pull(Registered.users)
+print(registered.users.estimate)
+registered.users.rounded = floor(registered.users.estimate/100)*100
+
+#update_latexnums("registeredusers",registered.users.rounded)
+
+
+b <- ggplot(data=df, aes(x=Year,y=Registered.users))+
+  geom_line(data = df,
+            aes(y = Registered.users, group = 1),
+            color = "olivedrab4", linetype = 1, size=1.5) +
+  geom_point(data = df,
+            aes(y = Registered.users, group = 1),
+            color = "olivedrab4") +
+  ggtitle(" ") +
+  geom_text(y= df$Registered.users,
+            label= df$label, vjust = 1.4,hjust = -.05) +
+  scale_y_continuous(expand=c(0.1, 0),
+                     n.breaks = 8) +
+   scale_x_continuous(limits = c(min_year, current_year+1), 
+                     breaks = seq(min_year, current_year+1, 2))+
+  labs(y= "", x= "Year") +
+  theme(text = element_text(size = 20)) +
+  theme_minimal()
+b
+ggsave(file.path(outputs,paste0("registered_users_",file_year,".pdf")), b,width=3.5,height=3.5,units="in")
+ggsave(file.path(outputs,paste0("registered_users_",file_year,".png")), b,width=3.5,height=3.5,units="in")
+
+```
+
+
+
+```{r}
+### Getting number of active users:
+# Defined by # of PIs with active projects or on registrations that have been updated in the last year
+
+## First getting the right subset
+aea_sm <- select(aea_orig, c(Title, Last.update.date,End.date,Primary.Investigator,Other.Primary.Investigators))
+#
+ aea_sm$Last.update.date <- as.Date(aea_sm$Last.update.date, format = "%B %d, %Y")
+ aea_sm$End.date <- as.Date(aea_sm$End.date)
+#
+ today <- Sys.Date()
+#
+ aea_sm <- filter(aea_sm, End.date >= today | Last.update.date >= paste0(file_year, "-02-01"))
+#
+#
+# ### Then we separate out the PIs:
+ Oth <- select(aea_sm, -c(Primary.Investigator))
+#
+ Oth <- better_sep(Oth,Oth$Other.Primary.Investigators,"; ","PIs")
+ Oth_long <- reshape_long(Oth,"PIs")
+#
+ Prim <- aea_sm %>%
+   dplyr::rename(PI = Primary.Investigator) %>%
+   select(PI)
+#
+ Oth <- Oth_long %>%
+   dplyr::rename(PI = PIs) %>%
+   select(PI)
+#
+ fin <- rbind(Prim,Oth)
+#
+ fin$PI <- str_trim(fin$PI)
+ fin <- filter(fin, PI != "")
+#
+ fin$PI <- gsub("\\s*\\([^\\)]+\\)","",as.character(fin$PI))
+#
+ fin$PI <- rm_email(fin$PI)
+ fin$PI <- str_trim(fin$PI)
+#
+ fin$PI <- sub("^(\\S*\\s+\\S+).*", "\\1", fin$PI)
+#
+ fin$PI <- tolower(fin$PI)
+ fin <- distinct(fin,PI)
+ fin <- fin[order(fin$PI),]
+#
+ print(paste0("The number of active registered users is: ",length(fin)))
+#
+ num_activeusers <- length(fin)
+# You cannot use a number or an underscore in the Latex variables
+ update_latexnums(paste0("activeusers"),num_activeusers)
+
+
+```
+
+
+
+
+
+
+
+```{r}
+source("99_write_nums.R",echo=TRUE)
+```
+
+
+
+
+
+
+
+
+

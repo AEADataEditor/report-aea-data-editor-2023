@@ -1,0 +1,515 @@
+
+R version 4.2.2 (2022-10-31) -- "Innocent and Trusting"
+Copyright (C) 2022 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> # Tabulate statistics and make graphs for the AEA data editor report
+> # Lars Vilhuber
+> # - This reformats tables created from the ScholarOne system 
+> # - Source data is confidential.
+> # 2/18/2021
+> 
+> # Inputs
+> #   - file.path(basepath,"data","scholarone","dataEditorReport_20191128-20201127.xlsx") 
+> # Outputs
+> #   - Tables
+> 
+> 
+> ### Load libraries 
+> ### Requirements: have library *here*
+> source(here::here("global-libraries.R"),echo=TRUE)
+
+> ppm.date <- "2023-11-01"
+
+> options(repos = paste0("https://packagemanager.posit.co/cran/", 
++     ppm.date, "/"))
+
+> global.libraries <- c("dplyr", "here", "tidyr", "tibble", 
++     "stringr", "readr", "splitstackshape", "digest", "remotes", 
++     "readxl", "write ..." ... [TRUNCATED] 
+
+> pkgTest <- function(x) {
++     if (!require(x, character.only = TRUE)) {
++         install.packages(x, dep = TRUE)
++         if (!require(x, charact .... [TRUNCATED] 
+
+> pkgTest.github <- function(libname, source, pkgname = libname) {
++     if (!require(libname, character.only = TRUE)) {
++         if (pkgname == "")  .... [TRUNCATED] 
+
+> results <- sapply(as.list(global.libraries), pkgTest)
+Loading required package: dplyr
+
+Attaching package: ‘dplyr’
+
+The following objects are masked from ‘package:stats’:
+
+    filter, lag
+
+The following objects are masked from ‘package:base’:
+
+    intersect, setdiff, setequal, union
+
+Loading required package: here
+here() starts at /home/rstudio
+Loading required package: tidyr
+Loading required package: tibble
+Loading required package: stringr
+Loading required package: readr
+Loading required package: splitstackshape
+Loading required package: digest
+Loading required package: remotes
+Loading required package: readxl
+Loading required package: writexl
+Loading required package: ggplot2
+Loading required package: ggthemes
+Loading required package: janitor
+
+Attaching package: ‘janitor’
+
+The following objects are masked from ‘package:stats’:
+
+    chisq.test, fisher.test
+
+Loading required package: dataverse
+
+> pkgTest.github("stargazer", "markwestcott34", "stargazer-booktabs")
+Loading required package: stargazer
+
+Please cite as: 
+
+ Hlavac, Marek (2015). stargazer: Well-Formatted Regression and Summary Statistics Tables.
+ R package version 5.2. http://CRAN.R-project.org/package=stargazer 
+
+[1] "OK"
+> source(here::here("programs","config.R"),echo=TRUE)
+
+> process_anon <- TRUE
+
+> download_anon <- TRUE
+
+> report.year <- 2023
+
+> firstday <- paste0(as.character(report.year - 1), 
++     "-12-01")
+
+> lastday <- paste0(as.character(report.year), "-11-30")
+
+> basepath <- here::here()
+
+> setwd(basepath)
+
+> jira.anon.partial <- file.path("data", "jira", "anon")
+
+> jiraanon <- file.path(basepath, jira.anon.partial)
+
+> manual <- file.path(basepath, "data", "manual")
+
+> jira.raw <- file.path("data", "jira", "raw")
+
+> icpsrbase <- file.path(basepath, "data", "icpsr")
+
+> icpsr.utilization.date <- "2023-12-06"
+
+> icpsr.utilization.file <- paste0("utilizationReport-", 
++     icpsr.utilization.date, ".csv")
+
+> icpsr.custom.xlsx <- "AEA-2023-Jan-1-through-Nov-28-2023.xlsx"
+
+> zenodobase <- file.path(basepath, "data", "zenodo")
+
+> jira.anon.name <- file.path(jiraanon, "jira.anon.RDS")
+
+> jira.anon.commit <- "c02c1a68b2bdc24704d1e51b5273df209ad31378"
+
+> jira.anon.sha256 <- "6f76b58e101f88469698cfec98a834f160f25db6549d433f45520be21360d3d5"
+
+> jira.anon.urlbase <- paste0("https://raw.githubusercontent.com/AEADataEditor/processing-jira-process-data/", 
++     jira.anon.commit)
+
+> jira.anon.url <- file.path(jira.anon.urlbase, "data", 
++     "anon", "jira.anon.RDS")
+
+> jira.members.url <- file.path(jira.anon.urlbase, "data", 
++     "replicationlab_members.txt")
+
+> jira.members.name <- file.path(jiraanon, "replicationlab_members.txt")
+
+> jira.noncompliance.name <- file.path(jira.raw, "jira-search-non-compliant.xlsx")
+
+> jira.updates.name <- file.path(jira.raw, "jira-search-updates.xlsx")
+
+> jira.nda.name <- file.path(jira.raw, "jira-search-nda.xlsx")
+
+> jira.external.name <- file.path(jira.raw, "jira-search-external.xlsx")
+
+> scholarone <- file.path(basepath, "data", "scholarone")
+
+> scholarone.file <- "dataEditorReport_20221111-20231110.xlsx"
+
+> scholarone.name <- file.path(scholarone, scholarone.file)
+
+> scholarone.prev <- "dataEditorReport_20201128-20211127Revised.xlsx"
+
+> scholarone.skip <- 33
+
+> scholarone.skip2 <- 45
+
+> scholarone.pskip <- 31
+
+> images <- file.path(basepath, "images")
+
+> tables <- file.path(basepath, "tables")
+
+> programs <- file.path(basepath, "programs")
+
+> temp <- file.path(basepath, "data", "temp")
+
+> latexnums.Rda <- file.path(tables, "latexnums.Rda")
+
+> latexnums.tex <- file.path(tables, "latexnums.tex")
+
+> for (dir in list(images, tables, programs, temp)) {
++     if (file.exists(dir)) {
++     }
++     else {
++         dir.create(file.path(dir))
++     }
+ .... [TRUNCATED] 
+
+> set.seed(20201201)
+
+> pkgTest("tibble")
+[1] "OK"
+
+> if (file.exists(latexnums.Rda)) {
++     print(paste0("File for export to LaTeX found: ", latexnums.Rda))
++ } else {
++     latexnums <- tibble(field  .... [TRUNCATED] 
+[1] "File for export to LaTeX found: /home/rstudio/tables/latexnums.Rda"
+
+> update_latexnums <- function(field, value) {
++     latexnums <- readRDS(latexnums.Rda)
++     if (any(latexnums$field == field)) {
++         message( .... [TRUNCATED] 
+
+> .Last <- function() {
++     sessionInfo()
++ }
+> 
+> # Do we do the previous year comparison?
+> 
+> do.previous.year = FALSE
+> 
+> 
+> ## Non-standard - install of a page with same name
+> #pkgTest.github("stargazer-booktabs","markwestcott34")
+> library(stargazer)
+> 
+> # Get Median number of rounds
+> 
+> ## Get list of journals
+> 
+> 
+> jira.journals <- readRDS(jira.anon.name)  %>%
++             distinct(Journal) %>%
++             filter(! Journal %in% c("JEP","JEL","","AEA P&P")) %>%
++             mutate(Journal = str_replace(Journal,":"," "),
++                    Journal = str_replace(Journal," Economics",""),
++                    Journal = str_replace(Journal," Economic","")) 
+> 
+> # diagnostics
+> 
+> jira.journals
+       Journal
+1 AER Insights
+2          AER
+3  AEJ Applied
+4    AEJ Macro
+5   AEJ Policy
+6    AEJ Micro
+> 
+> ## cycle over journals
+> 
+> read_scholarone <- function(filename,skip,alt=FALSE) {
++   rounds <- tibble()
++   for ( j in as.list(jira.journals$Journal)) {
++     print(paste0("Reading in ",j))
++     so <- read_excel(filename,
++                      sheet = j, skip = skip, n_max = 3) 
++     if ( alt ) {
++       so <- so %>% rename(`Total Rounds` = `...1`)
++     }
++     
++     so <- so %>% 
++       select(Rounds = `Total Rounds`,Count = `Manuscripts`) %>%
++       mutate(Journal = j,
++              jorder  = if_else(substr(j,1,3)=="AER",0,1))
++     rounds <- bind_rows(rounds,so)
++     print(so)
++   }
++   rounds <- rounds %>% 
++     arrange(jorder,Journal) %>%
++     select(Journal,Rounds,Count)
++   return(rounds)
++ }
+> 
+> # read the files
+> 
+> rounds <- read_scholarone(scholarone.name,scholarone.skip) 
+[1] "Reading in AER Insights"
+# A tibble: 3 × 4
+  Rounds Count Journal      jorder
+   <dbl> <dbl> <chr>         <dbl>
+1      1    16 AER Insights      0
+2      2     4 AER Insights      0
+3      3     1 AER Insights      0
+[1] "Reading in AER"
+# A tibble: 3 × 4
+  Rounds Count Journal jorder
+   <dbl> <dbl> <chr>    <dbl>
+1      1    59 AER          0
+2      2    12 AER          0
+3      3     1 AER          0
+[1] "Reading in AEJ Applied"
+# A tibble: 2 × 4
+  Rounds Count Journal     jorder
+   <dbl> <dbl> <chr>        <dbl>
+1      1    39 AEJ Applied      1
+2      2     5 AEJ Applied      1
+[1] "Reading in AEJ Macro"
+# A tibble: 3 × 4
+  Rounds Count Journal   jorder
+   <dbl> <dbl> <chr>      <dbl>
+1      1    22 AEJ Macro      1
+2      2     4 AEJ Macro      1
+3      3     1 AEJ Macro      1
+[1] "Reading in AEJ Policy"
+# A tibble: 2 × 4
+  Rounds Count Journal    jorder
+   <dbl> <dbl> <chr>       <dbl>
+1      1    36 AEJ Policy      1
+2      2     3 AEJ Policy      1
+[1] "Reading in AEJ Micro"
+# A tibble: 3 × 4
+  Rounds Count Journal   jorder
+   <dbl> <dbl> <chr>      <dbl>
+1      1    14 AEJ Micro      1
+2      2     0 AEJ Micro      1
+3      3     3 AEJ Micro      1
+> 
+> underreview <- read_scholarone(scholarone.name,scholarone.skip2,alt=TRUE) %>%
++   mutate(Count = if_else(is.na(Rounds),0,Count),
++          Rounds = if_else(is.na(Rounds),"With Author",Rounds))
+[1] "Reading in AER Insights"
+New names:
+• `` -> `...1`
+# A tibble: 3 × 4
+  Rounds      Count Journal      jorder
+  <chr>       <dbl> <chr>         <dbl>
+1 With Author     1 AER Insights      0
+2 With Editor     1 AER Insights      0
+3 Total           2 AER Insights      0
+[1] "Reading in AER"
+New names:
+• `` -> `...1`
+# A tibble: 3 × 4
+  Rounds      Count Journal jorder
+  <chr>       <dbl> <chr>    <dbl>
+1 With Author     3 AER          0
+2 With Editor    13 AER          0
+3 Total          16 AER          0
+[1] "Reading in AEJ Applied"
+New names:
+• `` -> `...1`
+# A tibble: 3 × 4
+  Rounds      Count Journal     jorder
+  <chr>       <dbl> <chr>        <dbl>
+1 With Author     1 AEJ Applied      1
+2 With Editor    14 AEJ Applied      1
+3 Total          15 AEJ Applied      1
+[1] "Reading in AEJ Macro"
+New names:
+• `` -> `...1`
+# A tibble: 3 × 4
+  Rounds      Count Journal   jorder
+  <chr>       <dbl> <chr>      <dbl>
+1 With Author     2 AEJ Macro      1
+2 With Editor    24 AEJ Macro      1
+3 Total          26 AEJ Macro      1
+[1] "Reading in AEJ Policy"
+New names:
+• `` -> `...1`
+# A tibble: 3 × 4
+  Rounds      Count Journal    jorder
+  <chr>       <dbl> <chr>       <dbl>
+1 With Author     1 AEJ Policy      1
+2 With Editor    18 AEJ Policy      1
+3 Total          19 AEJ Policy      1
+[1] "Reading in AEJ Micro"
+New names:
+• `` -> `...1`
+# A tibble: 2 × 4
+  Rounds      Count Journal   jorder
+  <chr>       <dbl> <chr>      <dbl>
+1 With Editor    13 AEJ Micro      1
+2 Total          13 AEJ Micro      1
+> 
+> reportyear.current <- substr(str_split(scholarone.file,"-")[[1]][2],1,4)
+> 
+> 
+> # summarize
+> 
+> rounds.all <- rounds %>%
++   group_by(Rounds) %>%
++   summarize(Count = sum(Count)) %>%
++   ungroup() %>%
++   arrange(Rounds) %>%
++   mutate(CPercent = cumsum(100*Count/sum(Count)),
++          Percent = round(100*Count/sum(Count),1))
+> 
+> 
+> # we also want to read back in the previous year. This is custom code here.
+> # This file is not provided as part of the replication package, as it is 
+> # available in the previous year's repository
+> if ( do.previous.year ) {
++   scholarone.pname <- file.path(scholarone,scholarone.prev)
++   reportyear.prev <- substr(str_split(scholarone.prev,"-")[[1]][2],1,4)
++   
++   rounds.pyear <- read_scholarone(scholarone.pname,scholarone.pskip) %>% 
++     mutate(reportyear={{ reportyear.prev}})
++   
++   # summarize
++   rounds.pall <- rounds.pyear %>%
++     group_by(Rounds) %>%
++     summarize(Count = sum(Count)) %>%
++     ungroup() %>%
++     arrange(Rounds) %>%
++     mutate(CPercent = cumsum(100*Count/sum(Count)),
++            Percent = round(100*Count/sum(Count),1))
++ }
+> 
+> # pre-aggregated - which is the median?
+> 
+> median <- NA
+> pmedian <- NA
+> 
+> for ( row in 1:nrow(rounds.all) ) {
++   print(paste0(row))
++   if ( rounds.all$CPercent[row] > 50 & is.na(median) ) {
++     median = rounds.all$Rounds[row]
++   }
++ }
+[1] "1"
+[1] "2"
+[1] "3"
+> 
+> update_latexnums("medianrounds",median)
+Adding new row for field medianrounds
+> update_latexnums("roundone",rounds.all$Percent[1])
+Adding new row for field roundone
+> update_latexnums("roundthree",rounds.all$Percent[3])
+Adding new row for field roundthree
+> 
+> 
+> 
+> 
+> if ( do.previous.year ) {
++   for ( row in 1:nrow(rounds.pall) ) {
++     print(paste0(row))
++     if ( rounds.all$CPercent[row] > 50 & is.na(pmedian) ) {
++       pmedian = rounds.all$Rounds[row]
++     }
++   }
++   update_latexnums("pmedianrounds",pmedian)
++   update_latexnums("proundone",rounds.pall$Percent[1])
++   update_latexnums("proundthree",rounds.pall$Percent[3])
++ }
+> 
+> 
+> 
+> # create table
+> 
+> rounds.wide <- rounds %>%
++   select(Journal,Rounds,Count) %>%
++   pivot_wider(names_from = Journal,
++               values_from = Count,
++               values_fill = 0)
+> 
+> stargazer(rounds.wide,style = "aer",
++           summary = FALSE,
++           out = file.path(tables,"n_rounds.tex"),
++           out.header = FALSE,
++           float = FALSE,
++           rownames = FALSE
++ )
+
+% Table created by stargazer v.5.2 by Marek Hlavac, Harvard University. E-mail: hlavac at fas.harvard.edu
+% Date and time: Mon, Dec 11, 2023 - 09:06:37 PM
+\begin{tabular}{@{\extracolsep{5pt}} ccccccc} 
+\toprule 
+Rounds & AER & AER Insights & AEJ Applied & AEJ Macro & AEJ Micro & AEJ Policy \\ 
+\midrule 1 & 59 & 16 & 39 & 22 & 14 & 36 \\ 
+2 & 12 & 4 & 5 & 4 & 0 & 3 \\ 
+3 & 1 & 1 & 0 & 1 & 3 & 0 \\ 
+\bottomrule 
+\end{tabular} 
+> 
+> # Merge with previous year to generate figure
+> # to convince ggplot to do the right stacked chart, we need the percentages pre-calculated
+> # We also go wide then narrow to get zeros
+> 
+> if ( do.previous.year ) {
++ rounds.pwide <- rounds.pyear %>%
++   select(Journal,Rounds,Count) %>%
++   pivot_wider(names_from = Journal,
++               values_from = Count,
++               values_fill = 0) %>%
++   pivot_longer(cols = starts_with("A"),
++                names_to = "Journal",
++                values_to = "Count") %>%
++   mutate(reportyear={{ reportyear.prev }})
++ 
++ 
++ rounds.years <- bind_rows(rounds.wide %>%
++                           pivot_longer(cols = starts_with("A"),
++                                        names_to = "Journal",
++                                        values_to = "Count") %>%
++   mutate(reportyear={{ reportyear.current}}),rounds.pwide) %>%
++   arrange(reportyear) %>%
++   group_by(reportyear,Journal) %>%
++   mutate(fraction = round(100*Count/sum(Count),0),
++          Rounds=as.factor(Rounds)) 
++ 
++ rounds.plot <- ggplot(rounds.years,aes(y=fraction,x=Journal,fill=Rounds,group=reportyear)) + 
++   geom_bar(stat='identity') + 
++   scale_x_discrete(guide = guide_axis(n.dodge=2))+
++   theme_tufte() +
++   scale_fill_brewer(palette="Paired") +
++   labs(y=element_blank()) +
++   facet_grid(~ reportyear)
++ 
++ 
++ ggsave(file.path(images,"plot_rounds_compare.png"), 
++        rounds.plot +
++          labs(y=element_blank(),title=element_blank()),
++        width=7,height=3,units="in")
++ }
+> 
+> proc.time()
+   user  system elapsed 
+  1.965   1.422   1.818 

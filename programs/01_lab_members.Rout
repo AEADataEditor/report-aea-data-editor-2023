@@ -1,0 +1,250 @@
+
+R version 4.2.2 (2022-10-31) -- "Innocent and Trusting"
+Copyright (C) 2022 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> # Download lab members from public repo
+> # Author: Lars Vilhuber
+> 
+> ## Inputs: export_MM-DD-YYYY.csv
+> ## Outputs: file.path(basepath,"data","replicationlab_members.txt")
+> 
+> ### Cleans working environment.
+> source(here::here("global-libraries.R"),echo=TRUE)
+
+> ppm.date <- "2023-11-01"
+
+> options(repos = paste0("https://packagemanager.posit.co/cran/", 
++     ppm.date, "/"))
+
+> global.libraries <- c("dplyr", "here", "tidyr", "tibble", 
++     "stringr", "readr", "splitstackshape", "digest", "remotes", 
++     "readxl", "write ..." ... [TRUNCATED] 
+
+> pkgTest <- function(x) {
++     if (!require(x, character.only = TRUE)) {
++         install.packages(x, dep = TRUE)
++         if (!require(x, charact .... [TRUNCATED] 
+
+> pkgTest.github <- function(libname, source, pkgname = libname) {
++     if (!require(libname, character.only = TRUE)) {
++         if (pkgname == "")  .... [TRUNCATED] 
+
+> results <- sapply(as.list(global.libraries), pkgTest)
+Loading required package: dplyr
+
+Attaching package: ‘dplyr’
+
+The following objects are masked from ‘package:stats’:
+
+    filter, lag
+
+The following objects are masked from ‘package:base’:
+
+    intersect, setdiff, setequal, union
+
+Loading required package: here
+here() starts at /home/rstudio
+Loading required package: tidyr
+Loading required package: tibble
+Loading required package: stringr
+Loading required package: readr
+Loading required package: splitstackshape
+Loading required package: digest
+Loading required package: remotes
+Loading required package: readxl
+Loading required package: writexl
+Loading required package: ggplot2
+Loading required package: ggthemes
+Loading required package: janitor
+
+Attaching package: ‘janitor’
+
+The following objects are masked from ‘package:stats’:
+
+    chisq.test, fisher.test
+
+Loading required package: dataverse
+
+> pkgTest.github("stargazer", "markwestcott34", "stargazer-booktabs")
+Loading required package: stargazer
+
+Please cite as: 
+
+ Hlavac, Marek (2015). stargazer: Well-Formatted Regression and Summary Statistics Tables.
+ R package version 5.2. http://CRAN.R-project.org/package=stargazer 
+
+[1] "OK"
+> source(here::here("programs","config.R"),echo=TRUE)
+
+> process_anon <- TRUE
+
+> download_anon <- TRUE
+
+> report.year <- 2023
+
+> firstday <- paste0(as.character(report.year - 1), 
++     "-12-01")
+
+> lastday <- paste0(as.character(report.year), "-11-30")
+
+> basepath <- here::here()
+
+> setwd(basepath)
+
+> jira.anon.partial <- file.path("data", "jira", "anon")
+
+> jiraanon <- file.path(basepath, jira.anon.partial)
+
+> manual <- file.path(basepath, "data", "manual")
+
+> jira.raw <- file.path("data", "jira", "raw")
+
+> icpsrbase <- file.path(basepath, "data", "icpsr")
+
+> icpsr.utilization.date <- "2023-12-06"
+
+> icpsr.utilization.file <- paste0("utilizationReport-", 
++     icpsr.utilization.date, ".csv")
+
+> icpsr.custom.xlsx <- "AEA-2023-Jan-1-through-Nov-28-2023.xlsx"
+
+> zenodobase <- file.path(basepath, "data", "zenodo")
+
+> jira.anon.name <- file.path(jiraanon, "jira.anon.RDS")
+
+> jira.anon.commit <- "c02c1a68b2bdc24704d1e51b5273df209ad31378"
+
+> jira.anon.sha256 <- "6f76b58e101f88469698cfec98a834f160f25db6549d433f45520be21360d3d5"
+
+> jira.anon.urlbase <- paste0("https://raw.githubusercontent.com/AEADataEditor/processing-jira-process-data/", 
++     jira.anon.commit)
+
+> jira.anon.url <- file.path(jira.anon.urlbase, "data", 
++     "anon", "jira.anon.RDS")
+
+> jira.members.url <- file.path(jira.anon.urlbase, "data", 
++     "replicationlab_members.txt")
+
+> jira.members.name <- file.path(jiraanon, "replicationlab_members.txt")
+
+> jira.noncompliance.name <- file.path(jira.raw, "jira-search-non-compliant.xlsx")
+
+> jira.updates.name <- file.path(jira.raw, "jira-search-updates.xlsx")
+
+> jira.nda.name <- file.path(jira.raw, "jira-search-nda.xlsx")
+
+> jira.external.name <- file.path(jira.raw, "jira-search-external.xlsx")
+
+> scholarone <- file.path(basepath, "data", "scholarone")
+
+> scholarone.file <- "dataEditorReport_20221111-20231110.xlsx"
+
+> scholarone.name <- file.path(scholarone, scholarone.file)
+
+> scholarone.prev <- "dataEditorReport_20201128-20211127Revised.xlsx"
+
+> scholarone.skip <- 33
+
+> scholarone.skip2 <- 45
+
+> scholarone.pskip <- 31
+
+> images <- file.path(basepath, "images")
+
+> tables <- file.path(basepath, "tables")
+
+> programs <- file.path(basepath, "programs")
+
+> temp <- file.path(basepath, "data", "temp")
+
+> latexnums.Rda <- file.path(tables, "latexnums.Rda")
+
+> latexnums.tex <- file.path(tables, "latexnums.tex")
+
+> for (dir in list(images, tables, programs, temp)) {
++     if (file.exists(dir)) {
++     }
++     else {
++         dir.create(file.path(dir))
++     }
+ .... [TRUNCATED] 
+
+> set.seed(20201201)
+
+> pkgTest("tibble")
+[1] "OK"
+
+> if (file.exists(latexnums.Rda)) {
++     print(paste0("File for export to LaTeX found: ", latexnums.Rda))
++ } else {
++     latexnums <- tibble(field  .... [TRUNCATED] 
+
+> update_latexnums <- function(field, value) {
++     latexnums <- readRDS(latexnums.Rda)
++     if (any(latexnums$field == field)) {
++         message( .... [TRUNCATED] 
+
+> .Last <- function() {
++     sessionInfo()
++ }
+> 
+> 
+> # Read in data extracted from Jira, anonymized
+> 
+> if ( file.exists(jira.members.name) ) {
++   message("File exists, proceeding.")
++   message(jira.members.name)
++ } else {
++   message("Attempting to download file")
++   try(download.file(jira.members.url,jira.members.name,mode="wb"))
++   if ( file.exists(jira.members.name) ) {
++     message("Download successful, proceeding.")
++   } else {
++     stop("Download failed. Please investigate")
++   }
++ }
+File exists, proceeding.
+/home/rstudio/data/jira/anon/replicationlab_members.txt
+> 
+> # read it in, and filter out some members who are not undergraduates
+> 
+> lab.members <- read_csv(jira.members.name) %>%
++   filter(! Assignee %in% c("Leonel Borja Plaza","Jenna Kutz Farabaugh","Hyuk Son","Sofia Encarnacion","Linda Wang")) %>%
++   arrange(Assignee) %>%
++   # Tricky way to get this to be text when output!
++   mutate(extra=",")
+Rows: 45 Columns: 1
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr (1): Assignee
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+> lab.members$extra[nrow(lab.members)]="."
+> 
+> update_latexnums("teamsize",nrow(lab.members))
+Adding new row for field teamsize
+> 
+> write.table(lab.members, 
++             file = file.path(tables,"replicationlab_members.tex"), sep = "",
++             row.names = FALSE,col.names = FALSE,quote = FALSE)
+> 
+> 
+> proc.time()
+   user  system elapsed 
+  1.299   1.430   1.200 
