@@ -1,0 +1,205 @@
+
+
+% Bibstyle aea-mod.bst version 2018.10.02
+
+\begin{thebibliography}{xx}
+
+\harvarditem[Abrams, Libgober \harvardand\ List]{Eliot Abrams, Jonathan
+  Libgober \harvardand\ John List}{2020}{abrams_research_2020}
+{\bf Abrams, Eliot, Jonathan Libgober, and John List.} 2020. ``Research
+  {Registries}: {Facts}, {Myths}, and {Possible} {Improvements}.'' National
+  Bureau of Economic Research w27250, \url{https://doi.org/10.3386/w27250}.
+
+\harvarditem[{AEA Data Editor}]{{AEA Data
+  Editor}}{2021}{aea_data_editor_use_2021}
+{\bf {AEA Data Editor}.} 2021. ``Use of {Docker} for {Reproducibility} in
+  {Economics}.'' \url{https://aeadataeditor.github.io/posts/2021-11-16-docker}
+  (accessed 2022-01-03).
+
+\harvarditem[{AEA RCT Registry}]{{AEA RCT Registry}}{2024}{DVN/2RZF2X_2024}
+{\bf {AEA RCT Registry}.} 2024. ``{Registrations in the AEA RCT Registry
+  (2013-05-15 through 2024-02-01)}.'' Harvard Dataverse [data],
+  \url{https://doi.org/10.7910/DVN/2RZF2X}.
+
+\harvarditem[{American Economic Association}]{{American Economic
+  Association}}{2020}{10.1257/pandp.110.dcap}
+{\bf {American Economic Association}.} 2020. ``Data and Code Availability
+  Policy.'' {\em AEA Papers and Proceedings}, 110:~776--78.
+  \url{https://doi.org/10.1257/pandp.110.776}.
+
+\harvarditem[Brinckman et~al.]{Adam Brinckman, Kyle Chard, Niall Gaffney,
+  Mihael Hategan, Matthew~B. Jones, Kacper Kowalik, Sivakumar Kulasekaran,
+  Bertram Lud\"ascher, Bryce~D. Mecum, Jarek Nabrzyski, Victoria Stodden,
+  Ian~J. Taylor, Matthew~J. Turk \harvardand\ Kandace
+  Turner}{2018}{BrinckmanFutureGener.Comput.Syst.2018}
+{\bf Brinckman, Adam, Kyle Chard, Niall Gaffney, Mihael Hategan, Matthew~B.
+  Jones, Kacper Kowalik, Sivakumar Kulasekaran, Bertram Lud\"ascher, Bryce~D.
+  Mecum, Jarek Nabrzyski, Victoria Stodden, Ian~J. Taylor, Matthew~J. Turk, and
+  Kandace Turner.} 2018. ``Computing Environments for Reproducibility:
+  {{Capturing}} the ``{{Whole Tale}}''.'' {\em Future Generation Computer
+  Systems}. \url{https://doi.org/10.1016/j.future.2017.12.029}.
+
+\harvarditem[Buckley et~al.]{Pamela~R. Buckley, Charles~R. Ebersole,
+  Christine~M. Steeger, Laura~E. Michaelson, Karl~G. Hill \harvardand\ Frances
+  Gardner}{2022}{buckley_role_2022}
+{\bf Buckley, Pamela~R., Charles~R. Ebersole, Christine~M. Steeger, Laura~E.
+  Michaelson, Karl~G. Hill, and Frances Gardner.} 2022. ``The {Role} of
+  {Clearinghouses} in {Promoting} {Transparent} {Research}: {A}
+  {Methodological} {Study} of {Transparency} {Practices} for {Preventive}
+  {Interventions}.'' {\em Prevention Science}, 23(5):~787--798.
+  \url{https://doi.org/10.1007/s11121-021-01252-5}.
+
+\harvarditem[Christensen \harvardand\ Miguel]{Garret Christensen \harvardand\
+  Edward Miguel}{2018}{christensen_transparency_2018}
+{\bf Christensen, Garret, and Edward Miguel.} 2018. ``Transparency,
+  {Reproducibility}, and the {Credibility} of {Economics} {Research}.'' {\em
+  Journal of Economic Literature}, 56(3):~920--980.
+  \url{https://doi.org/10.1257/jel.20171350}.
+
+\harvarditem[Christensen et~al.]{Garret Christensen, Zenan Wang, Elizabeth~Levy
+  Paluck, Nicholas Swanson, David~J. Birke, Edward Miguel \harvardand\ Rebecca
+  Littman}{2019}{christensen_open_2019}
+{\bf Christensen, Garret, Zenan Wang, Elizabeth~Levy Paluck, Nicholas Swanson,
+  David~J. Birke, Edward Miguel, and Rebecca Littman.} 2019. ``Open {Science}
+  {Practices} are on the {Rise}: {The} {State} of {Social} {Science} ({3S})
+  {Survey}.'' \url{https://doi.org/10.31222/osf.io/5rksu}.
+
+\harvarditem[Clyburne-Sherin, Fei \harvardand\ Green]{April Clyburne-Sherin, Xu
+  Fei \harvardand\ Seth~Ariel Green}{2019}{clyburne-sherin_computational_2019}
+{\bf Clyburne-Sherin, April, Xu Fei, and Seth~Ariel Green.} 2019.
+  ``Computational {Reproducibility} via {Containers} in {Psychology}.'' {\em
+  Meta-Psychology}, 3. \url{https://doi.org/10.15626/MP.2018.892}.
+
+\harvarditem[Corduneanu-Huci, Dorsch \harvardand\ Maarek]{Cristina
+  Corduneanu-Huci, Michael~T. Dorsch \harvardand\ Paul
+  Maarek}{2021}{corduneanu-huci_politics_2021}
+{\bf Corduneanu-Huci, Cristina, Michael~T. Dorsch, and Paul Maarek.} 2021.
+  ``The politics of experimentation: {Political} competition and randomized
+  controlled trials.'' {\em Journal of Comparative Economics}, 49(1):~1--21.
+  \url{https://doi.org/10.1016/j.jce.2020.09.002}.
+
+\harvarditem[Corduneanu-Huci, Dorsch \harvardand\ Maarek]{Cristina
+  Corduneanu-Huci, Michael~T. Dorsch \harvardand\ Paul
+  Maarek}{2022}{corduneanu-huci_what_2022}
+{\bf Corduneanu-Huci, Cristina, Michael~T. Dorsch, and Paul Maarek.} 2022.
+  ``What, {Where}, {Who}, and {Why}? {An} {Empirical} {Investigation} of
+  {Positionality} in {Political} {Science} {Field} {Experiments}.'' {\em PS:
+  Political Science \& Politics}, 55(4):~741--748.
+  \url{https://doi.org/10.1017/S104909652200066X}.
+
+\harvarditem[{Creative Commons}]{{Creative Commons}}{2017}{CreativeCommons2017}
+{\bf {Creative Commons}.} 2017. ``About {{The Licenses}}.''
+  \url{https://web.archive.org/web/20181208161819/https://creativecommons.org/licenses/}
+  (accessed 2018-12-08).
+
+\harvarditem[Deryugina, Shurchkov \harvardand\ Stearns]{Tatyana Deryugina, Olga
+  Shurchkov \harvardand\ Jenna Stearns}{2021{\em a}}{deryugina_covid-19_2021}
+{\bf Deryugina, Tatyana, Olga Shurchkov, and Jenna Stearns.} 2021{\em a}.
+  ``{COVID}-19 {Disruptions} {Disproportionately} {Affect} {Female}
+  {Academics}.'' {\em AEA Papers and Proceedings}, 111:~164--168.
+  \url{https://doi.org/10.1257/pandp.20211017}.
+
+\harvarditem[Deryugina, Shurchkov \harvardand\ Stearns]{Tatyana Deryugina, Olga
+  Shurchkov \harvardand\ Jenna Stearns}{2021{\em b}}{deryugina2021data}
+{\bf Deryugina, Tatyana, Olga Shurchkov, and Jenna Stearns.} 2021{\em b}.
+  ``Data for: {COVID}-19 Disruptions Disproportionately Affect Female
+  Academics.'' American Economic Association [publisher] Inter-university
+  Consortium for Political and Social Research [distributor],
+  \url{https://doi.org/10.3886/E139263V1}.
+
+\harvarditem[Duflo \harvardand\ Hoynes]{Esther Duflo \harvardand\ Hilary
+  Hoynes}{2018}{10.1257/pandp.108.745}
+{\bf Duflo, Esther, and Hilary Hoynes.} 2018. ``Report of the Search Committee
+  to Appoint a Data Editor for the AEA.'' {\em AEA Papers and Proceedings},
+  108:~745. \url{https://doi.org/10.1257/pandp.108.745}.
+
+\harvarditem[{FORCE11}]{{FORCE11}}{2016}{FORCE11FAIRDATAPRINCIPLES}
+{\bf {FORCE11}.} 2016. ``THE {FAIR} DATA PRINCIPLES.''
+  \url{https://www.force11.org/group/fairgroup/fairprinciples} (accessed
+  2017-05-26).
+
+\harvarditem[Goncalves \harvardand\ Mello]{Felipe Goncalves \harvardand\ Steven
+  Mello}{2021{\em a}}{goncalves_few_2021}
+{\bf Goncalves, Felipe, and Steven Mello.} 2021{\em a}. ``A {Few} {Bad}
+  {Apples}? {Racial} {Bias} in {Policing}.'' {\em American Economic Review},
+  111(5):~1406--1441. \url{https://doi.org/10.1257/aer.20181607}.
+
+\harvarditem[Goncalves \harvardand\ Mello]{Felipe Goncalves \harvardand\ Steven
+  Mello}{2021{\em b}}{goncalves2021data}
+{\bf Goncalves, Felipe, and Steven Mello.} 2021{\em b}. ``Supplementary Data
+  for: {A} Few Bad Apples? {Racial} Bias in Policing.'' American Economic
+  Association [publisher] Inter-university Consortium for Political and Social
+  Research [distributor], \url{https://doi.org/10.3886/E123921V1}.
+
+\harvarditem[Koren et~al.]{Miklós Koren, Marie Connolly, Joan Lull
+  \harvardand\ Lars Vilhuber}{2022}{datacodestandardv1}
+{\bf Koren, Miklós, Marie Connolly, Joan Lull, and Lars Vilhuber.} 2022.
+  ``Data and Code Availability Standard.'' Zenodo v1,
+  \url{https://doi.org/10.5281/zenodo.7436134}.
+
+\harvarditem[Laitin et~al.]{David~D. Laitin, Edward Miguel, Ala’
+  Alrababa’h, Aleksandar Bogdanoski, Sean Grant, Katherine Hoeberling,
+  Cecilia~Hyunjung Mo, Don~A. Moore, Simine Vazire, Jeremy Weinstein
+  \harvardand\ Scott Williamson}{2021}{laitin_reporting_2021}
+{\bf Laitin, David~D., Edward Miguel, Ala’ Alrababa’h, Aleksandar
+  Bogdanoski, Sean Grant, Katherine Hoeberling, Cecilia~Hyunjung Mo, Don~A.
+  Moore, Simine Vazire, Jeremy Weinstein, and Scott Williamson.} 2021.
+  ``Reporting all results efficiently: {A} {RARE} proposal to open up the file
+  drawer.'' {\em Proceedings of the National Academy of Sciences}, 118(52).
+  \url{https://doi.org/10.1073/pnas.2106178118}.
+
+\harvarditem[Leight, Asri \harvardand\ Imai]{Jessica Leight, Viola Asri
+  \harvardand\ Taisuke Imai}{2022}{leight_publication_2022}
+{\bf Leight, Jessica, Viola Asri, and Taisuke Imai.} 2022. ``Publication {Bias}
+  in {Randomized} {Controlled} {Trials}: {Evidence} from the {American}
+  {Economic} {Association} {Registry}.''
+  \url{https://doi.org/10.17605/OSF.IO/WSXD9}.
+
+\harvarditem[Miguel]{Edward Miguel}{2021}{miguel_evidence_2021}
+{\bf Miguel, Edward.} 2021. ``Evidence on {Research} {Transparency} in
+  {Economics}.'' {\em Journal of Economic Perspectives}, 35(3):~193--214.
+  \url{https://doi.org/10.1257/jep.35.3.193}.
+
+\harvarditem[Murtagh-White, Wall \harvardand\ O’Sullivan]{Matt Murtagh-White,
+  P.~J. Wall \harvardand\ Declan
+  O’Sullivan}{2023}{murtagh-white_learning_2023}
+{\bf Murtagh-White, Matt, P.~J. Wall, and Declan O’Sullivan.} 2023.
+  ``Learning from the {Evidence}: {Impact} {Evaluations}, {Ontology} and
+  {Policy}.'' 104--106. \url{https://doi.org/10.1109/ICSC56153.2023.00023}.
+
+\harvarditem[Ofosu \harvardand\ Posner]{George Ofosu \harvardand\ Daniel~N.
+  Posner}{2019}{ofosu_pre-analysis_2019}
+{\bf Ofosu, George, and Daniel~N. Posner.} 2019. ``Pre-analysis {Plans}: {A}
+  {Stocktaking}.'' Berkeley Initiative for Transparency in the Social Sciences
+  (BITSS) {MetaArXiv} {Preprints} e4pum.
+  \url{https://doi.org/10.31222/osf.io/e4pum} (accessed 2020-06-15).
+
+\harvarditem[Vilhuber]{Lars Vilhuber}{2019}{10.1257/pandp.109.718}
+{\bf Vilhuber, Lars.} 2019. ``Report by the AEA Data Editor.'' {\em AEA Papers
+  and Proceedings}, 109:~718--29. \url{https://doi.org/10.1257/pandp.109.718}.
+
+\harvarditem[Vilhuber]{Lars Vilhuber}{2024{\em a}}{report2023data}
+{\bf Vilhuber, Lars.} 2024{\em a}. ``Code and Data for: Report for 2023 by the
+  {AEA} {Data} {Editor}.'' American Economic Association [publisher],
+  \url{https://doi.org/10.3886/E198444V1}.
+
+\harvarditem[Vilhuber]{Lars Vilhuber}{2024{\em b}}{E117876V5}
+{\bf Vilhuber, Lars.} 2024{\em b}. ``Process data for the {AEA} Pre-publication
+  Verification Service.'' American Economic Association [publisher] V5,
+  \url{https://doi.org/10.3886/E117876V5}.
+
+\harvarditem[Vilhuber et~al.]{Lars Vilhuber, Hyuk~Harry Son, Meredith Welch,
+  David~N. Wasser \harvardand\ Michael Darisse}{2022{\em
+  a}}{vilhuber_teaching_2022}
+{\bf Vilhuber, Lars, Hyuk~Harry Son, Meredith Welch, David~N. Wasser, and
+  Michael Darisse.} 2022{\em a}. ``Teaching for large-scale {Reproducibility}
+  {Verification}.'' {\em Journal of Statistics and Data Science Education},
+  30(3):~274--281. \url{https://doi.org/10.1080/26939169.2022.2074582}.
+
+\harvarditem[Vilhuber et~al.]{Lars Vilhuber, Marie Connolly, Miklós Koren,
+  Joan Llull \harvardand\ Peter Morrow}{2022{\em b}}{READMEv1.1.0}
+{\bf Vilhuber, Lars, Marie Connolly, Miklós Koren, Joan Llull, and Peter
+  Morrow.} 2022{\em b}. ``{A template README for social science replication
+  packages}.'' \url{https://doi.org/10.5281/zenodo.7293838}.
+
+\end{thebibliography}
