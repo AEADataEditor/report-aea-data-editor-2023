@@ -1,4 +1,4 @@
-FROM rocker/verse:4.2.2
+FROM rocker/verse:4.2.3
 
 RUN apt-get update \
     && DEBIAN_FRONTEND=noninteractive apt-get install -y \
