@@ -17,7 +17,7 @@ def get_rootdir():
 
     cwd = os.getcwd()
     while cwd != os.path.dirname(cwd):
-        if os.path.exists(os.path.join(cwd, '.git')):
+        if os.path.exists(os.path.join(cwd, 'programs','01_zenodo_pull.py')):
             repo_root = cwd
             break
         cwd = os.path.dirname(cwd)
