@@ -229,6 +229,7 @@ Table and figure numbers in the paper do not map to program names, due to editor
 Registry-related figures are in `data/registry/Output/`:
 
 | Name of file | Figure/ Table in article | Program to create |
+|--------------|--------------------------|-------------------|
 | reg_pre_year_2023.png | Figure 2a | AEA Annual Report_reproducible.Rmd |
 | reg_cumulative_2023.png | Figure 2b | AEA Annual Report_reproducible.Rmd |
 | registered_users_2023.png| Figure 3a | AEA Annual Report_reproducible.Rmd |
@@ -238,7 +239,7 @@ In-text numbers are collected throughout all programs, and written out in `progr
 
 ## License
 
-See LICENSE.txt for data and code license.
+See [LICENSE.txt](LICENSE.txt) for data and code license.
 
 ## References
 
