@@ -136,7 +136,7 @@ The code was run with the following software versions, though others are likely 
   - requests-oauthlib==1.3.1
   - requests-toolbelt==1.0.0
 
-Packages are installed by `global-libraries.R` or defined in `requirements.txt`, and are sourced in the Dockerfile. For manual installation:
+Packages are installed by `global-libraries.R` or defined in `requirements.txt`, and are sourced in the Dockerfile. For manual installation, the following may work (not tested).
 
 ```
 R CMD BATCH global-libraries.R
@@ -153,12 +153,25 @@ build.sh
 .myconfig.sh
 ```
 
-and can be used by running `start_rstudio.sh` (for development) or `run.sh` (to simply produce all figures and tables not related to the registry).
+and can be used by running `start_rstudio.sh` (for development) or `run.sh` (to simply produce all figures and tables not related to the registry). These scripts are known to work on multiple Linux workstations, and on Intel Macs. They have not been tested in a Windows/Docker environment.
+
+All results in the report were created by running the R and Python code within the container. Running in other environments is untested.
 
 The registry code was run in an uncontrolled environment with R, but should be runable in any R environment support `tidyverse 1.3.2` and its component packages.
 
+### Hardware Requirements
 
-### Programs
+Code was last run on the following environment:
+
+- OS: "openSUSE Leap 15.5"
+- Processor:  AMD Ryzen 9 3900X 12-Core Processor, 24 cores
+- Memory available: 31GB memory
+- Docker version 24.0.7-ce, build 311b9ff0aa93 
+- Docker image `aeadataeditor/report-aea-data-editor-2023:2023-12-06` built from `rocker/verse:4.2.3`
+
+Memory requirements are minimal, and the code should run on any modern computer.
+
+## Programs
 
 All programs, except those processing the Registry data, are in the `programs` subdirectory:
 
@@ -190,11 +203,11 @@ AEA Annual Report_reproducible.Rmd
 
 ### Running code
 
-Each R file can be run independently (separate R sessions), in numerical order. See the `programs/README.md` file for further details.
+Each R file can be run independently (separate R sessions), in numerical order, e.g., `R CMD BATCH 02_lab_members.R`.
 
-The Python file `02_zenodo_pull.py` should be run manually.
+The Python file `01_zenodo_pull.py` can be run as `python3 01_zenodo_pull.py`.
 
-The script `run_all.sh` is used within a (Linux) shell to implement the above run order, but is optional. (Note: the Python script is not called from `run_all.sh`)
+The script `run_all.sh` is used within a (Linux) shell to implement the above run order, but is optional. 
 
 To run the registry code, `knit` the Rmd file.
 
