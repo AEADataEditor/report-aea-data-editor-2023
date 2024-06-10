@@ -112,6 +112,9 @@ data/zenodo/zenodo_data_2023_summary.csv
 
 The code was run with the following software versions, though others are likely to also work:
 
+- last run with [Docker image `aeadataeditor/report-aea-data-editor-2023:2023-12-06`](https://hub.docker.com/r/aeadataeditor/report-aea-data-editor-2023/tags) built from [`rocker/verse:4.2.3`](https://hub.docker.com/r/rocker/verse/tags)
+- Docker version 24.0.7-ce, build 311b9ff0aa93
+
 - R 4.2.3
   - Package versions set to as-of **2023-11-01**, using the Rstudio Package Manager, except for Github installed versions
   - dplyr
@@ -136,12 +139,14 @@ The code was run with the following software versions, though others are likely 
   - requests-oauthlib==1.3.1
   - requests-toolbelt==1.0.0
 
-Packages are installed by `global-libraries.R` or defined in `requirements.txt`, and are sourced in the Dockerfile. For manual installation, the following may work (not tested).
+Packages are installed by `global-libraries.R` or defined in `requirements.txt`, and are sourced in the Dockerfile. For manual installation, the following may work (not tested). It is strongly suggested to use environments if not using the container (see below).
 
 ```
 R CMD BATCH global-libraries.R
 pip install -r requirements.txt
 ```
+
+#### Building the container (optional) 
 
 A container was built, using the following files in this deposit:
 
@@ -153,11 +158,6 @@ build.sh
 .myconfig.sh
 ```
 
-and can be used by running `start_rstudio.sh` (for development) or `run.sh` (to simply produce all figures and tables not related to the registry). These scripts are known to work on multiple Linux workstations, and on Intel Macs. They have not been tested in a Windows/Docker environment.
-
-All results in the report were created by running the R and Python code within the container. Running in other environments is untested.
-
-The registry code was run in an uncontrolled environment with R, but should be runable in any R environment support `tidyverse 1.3.2` and its component packages.
 
 ### Hardware Requirements
 
@@ -166,8 +166,6 @@ Code was last run on the following environment:
 - OS: "openSUSE Leap 15.5"
 - Processor:  AMD Ryzen 9 3900X 12-Core Processor, 24 cores
 - Memory available: 31GB memory
-- Docker version 24.0.7-ce, build 311b9ff0aa93 
-- Docker image `aeadataeditor/report-aea-data-editor-2023:2023-12-06` built from `rocker/verse:4.2.3`
 
 Memory requirements are minimal, and the code should run on any modern computer.
 
@@ -203,6 +201,8 @@ AEA Annual Report_reproducible.Rmd
 
 ### Running code
 
+#### Generically
+
 Each R file can be run independently (separate R sessions), in numerical order, e.g., `R CMD BATCH 02_lab_members.R`.
 
 The Python file `01_zenodo_pull.py` can be run as `python3 01_zenodo_pull.py`.
@@ -210,6 +210,27 @@ The Python file `01_zenodo_pull.py` can be run as `python3 01_zenodo_pull.py`.
 The script `run_all.sh` is used within a (Linux) shell to implement the above run order, but is optional. 
 
 To run the registry code, `knit` the Rmd file.
+
+#### Using the container
+
+> NOTE: this was the only way the code was run by the authors.
+
+- The container can be started to serve RStudio, or to run from the shell. If using Rstudio, all code was run from the embedded terminal, not the R console.
+- Convenience bash scripts are provided for both options:  `start_rstudio.sh` (for RStudio) or `run.sh` (to simply produce all figures and tables not related to the registry).
+- These scripts are known to work on multiple Linux workstations, and on Intel Macs. They have not been tested in a Windows/Docker environment.
+- Alternatively, from a terminal, run Docker as follows to obtain a terminal with R, Python, and all configured packages:
+
+```
+WORKSPACE=$(pwd)
+space=aeadataeditor
+repo=report-aea-data-editor-2023
+tag=2023-12-05
+docker run -it  -v "$WORKSPACE/":/home/rstudio --rm --entrypoint /bin/bash $space/$repo:$tag
+```
+
+All results in the report were created by running the R and Python code within the container. Running in other environments is untested.
+
+The registry code was run in an uncontrolled environment with R, but should be runable in any R environment support `tidyverse 1.3.2` and its component packages.
 
 ### Mapping tables and figures to article
 
