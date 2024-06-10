@@ -112,7 +112,7 @@ data/zenodo/zenodo_data_2023_summary.csv
 
 The code was run with the following software versions, though others are likely to also work:
 
-- last run with [Docker image `aeadataeditor/report-aea-data-editor-2023:2023-12-06`](https://hub.docker.com/r/aeadataeditor/report-aea-data-editor-2023/tags) built from [`rocker/verse:4.2.3`](https://hub.docker.com/r/rocker/verse/tags)
+- last run with [Docker image `aeadataeditor/report-aea-data-editor-2023:2023-12-05`](https://hub.docker.com/r/aeadataeditor/report-aea-data-editor-2023/tags) built from [`rocker/verse:4.2.3`](https://hub.docker.com/r/rocker/verse/tags)
 - Docker version 24.0.7-ce, build 311b9ff0aa93
 
 - R 4.2.3
@@ -226,6 +226,12 @@ space=aeadataeditor
 repo=report-aea-data-editor-2023
 tag=2023-12-05
 docker run -it  -v "$WORKSPACE/":/home/rstudio --rm --entrypoint /bin/bash $space/$repo:$tag
+```
+- once at the shell, type
+
+```
+cd programs
+bash -x ./run_all.sh
 ```
 
 All results in the report were created by running the R and Python code within the container. Running in other environments is untested.
