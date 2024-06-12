@@ -199,6 +199,19 @@ The Registry data was provided by J-PAL, code can be found in `data/registry/Scr
 AEA Annual Report_reproducible.Rmd
 ```
 
+### Auxiliar code
+
+The following code is used to manage the repository and not necessary to reproduce the statistical results:
+
+```
+.myconfig.sh
+build.sh
+ls-tags.sh
+prepare_deposit.sh
+send_paper.sh
+```
+
+
 ### Running code
 
 #### Generically
