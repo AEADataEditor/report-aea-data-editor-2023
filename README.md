@@ -203,21 +203,23 @@ AEA Annual Report_reproducible.Rmd
 
 #### Generically
 
-Each R file can be run independently (separate R sessions), in numerical order, e.g., `R CMD BATCH 02_lab_members.R`.
 
 The Python file `01_zenodo_pull.py` can be run as `python3 01_zenodo_pull.py`.
 
+Each R file can be run independently (separate R sessions), in numerical order, e.g., `R CMD BATCH 02_lab_members.R`.
+
 The script `run_all.sh` is used within a (Linux) shell to implement the above run order, but is optional. 
 
-To run the registry code, `knit` the Rmd file.
+To run the registry code, `knit` the `data/registry/Scripts/AEA Annual Report_reproducible.Rmd` file.
 
 #### Using the container
 
 > NOTE: this was the only way the code was run by the authors.
 
-- The container can be started to serve RStudio, or to run from the shell. If using Rstudio, all code was run from the embedded terminal, not the R console.
+- The container can be started to serve RStudio, or to run from the shell. This has not been tested in a Windows/Docker environment nor on ARM Macs.
+- If using Rstudio, all code was run from the embedded terminal, not the R console.
 - Convenience bash scripts are provided for both options:  `start_rstudio.sh` (for RStudio) or `run.sh` (to simply produce all figures and tables not related to the registry).
-- These scripts are known to work on multiple Linux workstations, and on Intel Macs. They have not been tested in a Windows/Docker environment.
+- These scripts are known to work on multiple Linux workstations, and on Intel Macs. 
 - Alternatively, from a terminal, run Docker as follows to obtain a terminal with R, Python, and all configured packages:
 
 ```
@@ -236,7 +238,7 @@ bash -x ./run_all.sh
 
 All results in the report were created by running the R and Python code within the container. Running in other environments is untested.
 
-The registry code was run in an uncontrolled environment with R, but should be runable in any R environment support `tidyverse 1.3.2` and its component packages.
+The registry code was run in an uncontrolled environment with R, but should be runable in any R environment supporting `tidyverse 1.3.2` and its component packages.
 
 ### Mapping tables and figures to article
 
