@@ -112,7 +112,7 @@ data/zenodo/zenodo_data_2023_summary.csv
 
 The code was run with the following software versions, though others are likely to also work:
 
-- last run with [Docker image `aeadataeditor/report-aea-data-editor-2023:2023-12-05`](https://hub.docker.com/r/aeadataeditor/report-aea-data-editor-2023/tags) built from [`rocker/verse:4.2.3`](https://hub.docker.com/r/rocker/verse/tags)
+- last run with [Docker image `aeadataeditor/report-aea-data-editor-2023:2024-06-12`](https://hub.docker.com/r/aeadataeditor/report-aea-data-editor-2023/tags) built from [`rocker/verse:4.2.3`](https://hub.docker.com/r/rocker/verse/tags)
 - Docker version 24.0.7-ce, build 311b9ff0aa93
 
 - R 4.2.3
@@ -140,6 +140,9 @@ The code was run with the following software versions, though others are likely 
   - requests-toolbelt==1.0.0
 
 Packages are installed by `global-libraries.R` or defined in `requirements.txt`, and are sourced in the Dockerfile. For manual installation, the following may work (not tested). It is strongly suggested to use environments if not using the container (see below).
+
+- if running on Linux, adjust the `repos` line in `global-libraries.R` to correspond to your Linux distribution.
+- if running on Windows or macOS, or running an unsupported-version of Linux, choose the line above that (currently commented out). For more details, see [https://packagemanager.posit.co/client/#/repos/cran/setup](https://packagemanager.posit.co/client/#/repos/cran/setup).
 
 ```
 R CMD BATCH global-libraries.R
@@ -174,8 +177,8 @@ Memory requirements are minimal, and the code should run on any modern computer.
 All programs, except those processing the Registry data, are in the `programs` subdirectory:
 
 ```
-programs/01_lab_members.R
-programs/02_zenodo_pull.py
+programs/01_zenodo_pull.py
+programs/02_lab_members.R
 programs/03_jira_dataprep.R
 programs/04_prepare_icpsr.R
 programs/05_prepare_icpsr2.R
@@ -217,7 +220,7 @@ send_paper.sh
 #### Generically
 
 
-The Python file `01_zenodo_pull.py` can be run as `python3 01_zenodo_pull.py`.
+The Python file `01_zenodo_pull.py` can be run as `python3 01_zenodo_pull.py`. Note that running this code again overwrites the provided Zenodo metadata, and **will** generate (slightly) different results. To obtain the same results, do not run this part of the code.
 
 Each R file can be run independently (separate R sessions), in numerical order, e.g., `R CMD BATCH 02_lab_members.R`.
 
@@ -239,7 +242,7 @@ To run the registry code, `knit` the `data/registry/Scripts/AEA Annual Report_re
 WORKSPACE=$(pwd)
 space=aeadataeditor
 repo=report-aea-data-editor-2023
-tag=2023-12-05
+tag=2024-06-12
 docker run -it  -v "$WORKSPACE/":/home/rstudio --rm --entrypoint /bin/bash $space/$repo:$tag
 ```
 - once at the shell, type
@@ -291,3 +294,7 @@ See [LICENSE.txt](LICENSE.txt) for data and code license.
 - ICPSR. 2023b. "Deposit sizes for the AEA Data and Code Repository." ICPSR [publisher]. Received by email in December 2023.
 - Vilhuber,  Lars. 2024.  “Process  data  for  the AEA  Pre-publication  Verification  Service.” American Economic Association [publisher], https://doi.org/10.3886/E117876V5
 - Zenodo. 2023. "Metadata on deposits in community 'aeajournals'", accessed via Zenodo API on December 6, 2023.
+
+## Changes
+
+- The Docker container was updated on 2024-06-12, since the latest version on Docker Hub was not the latest version run for the report. To avoid any confusion, a new image was created on 2024-06-12.

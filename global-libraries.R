@@ -5,8 +5,10 @@
 
 
 ppm.date <- "2023-11-01"
-options(repos=paste0("https://packagemanager.posit.co/cran/",ppm.date,"/"))
-
+# For windows/macOS, uncomment this line:
+# options(repos=paste0("https://packagemanager.posit.co/cran/",ppm.date,"/"))
+# For linux/Docker image leave it as this line:
+options(repos = c(CRAN = paste0("https://packagemanager.posit.co/cran/__linux__/focal/",ppm.date)))
 
 global.libraries <- c("dplyr","here","tidyr","tibble","stringr",
                       "readr",
