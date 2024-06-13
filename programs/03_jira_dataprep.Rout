@@ -1,6 +1,6 @@
 
-R version 4.2.2 (2022-10-31) -- "Innocent and Trusting"
-Copyright (C) 2022 The R Foundation for Statistical Computing
+R version 4.2.3 (2023-03-15) -- "Shortstop Beagle"
+Copyright (C) 2023 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -33,8 +33,8 @@ Type 'q()' to quit R.
 
 > ppm.date <- "2023-11-01"
 
-> options(repos = paste0("https://packagemanager.posit.co/cran/", 
-+     ppm.date, "/"))
+> options(repos = c(CRAN = paste0("https://packagemanager.posit.co/cran/__linux__/focal/", 
++     ppm.date)))
 
 > global.libraries <- c("dplyr", "here", "tidyr", "tibble", 
 +     "stringr", "readr", "splitstackshape", "digest", "remotes", 
@@ -84,6 +84,7 @@ The following objects are masked from ‘package:stats’:
     chisq.test, fisher.test
 
 Loading required package: dataverse
+Loading required package: xtable
 
 > pkgTest.github("stargazer", "markwestcott34", "stargazer-booktabs")
 Loading required package: stargazer
@@ -223,7 +224,13 @@ Please cite as:
 +     stop("Download failed. Please investigate")
 +   }
 + }
-File exists, proceeding.
+Attempting to download file
+trying URL 'https://raw.githubusercontent.com/AEADataEditor/processing-jira-process-data/c02c1a68b2bdc24704d1e51b5273df209ad31378/data/anon/jira.anon.RDS'
+Content type 'application/octet-stream' length 276578 bytes (270 KB)
+==================================================
+downloaded 270 KB
+
+Download successful, proceeding.
 > 
 > jira.anon <- readRDS(jira.anon.name) 
 > #
@@ -381,7 +388,8 @@ Warning messages:
 +            final_status = if_else(!is.na(final_status != final_status.override),
 +                                final_status.override,final_status))
 + }
-File exists, proceeding.
+Override file not found. Run through this code once, then read instructions.
+==== /home/rstudio/data/temp/jira.others.xlsx =====
 > 
 > jira.issues.breakout <- jira.issues.breakout.late %>%
 +   # collapse outcomes
@@ -453,7 +461,6 @@ File exists, proceeding.
 +   # current list
 +   override <- jira.others
 + }
-File found. Preserving overrides, then read instructions.
 > # now write the file.
 >   write_xlsx(list(output=jira.others,override=override),
 +            path=file.path(temp,"jira.others.xlsx"))
@@ -470,4 +477,4 @@ Adding new row for field lastday
 > 
 > proc.time()
    user  system elapsed 
-  1.823   1.422   1.722 
+  1.652   1.518   1.822 
