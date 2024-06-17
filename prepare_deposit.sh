@@ -7,7 +7,7 @@ zip -rp $outfile tables/
 zip -rp $outfile programs/ 
 zip -rp $outfile images/*
 zip -rp $outfile data/jira/anon  
-zip -rp $outfile data/icpsr 
+zip -rp $outfile data/icpsr/anon*
 zip -rp $outfile data/registry/ 
 zip -rp $outfile data/scholarone/*
 zip -rp $outfile data/zenodo/*

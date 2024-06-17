@@ -55,6 +55,17 @@ data/jira/anon/README.md
 
 Data on lab members' names is directly downloaded from the Github repository associated with Vilhuber (2023), see `programs/config.R`.
 
+Several non-anonymous files are also used, and not provided. 
+
+```
+data/jira/raw/jira-search-external.xlsx
+data/jira/raw/jira-search-nda.xlsx
+data/jira/raw/jira-search-non-compliant.xlsx
+data/jira/raw/jira-search-updates.xlsx
+```
+
+These are used in `11_table1_compliance.R`, which will not produce the related (simple) summary tables. 
+
 ### openICPSR data on deposits (ICPSR, 2023a)
 
 The data are obtained on demand from the internal systems underlying the AEA Data and Code repository. The internal systems are accessible only to ICPSR staff, and were provided to the AEA Data Editor upon request. They are not accessible to others. The data were lightly hand-edited to account for formatting errors (double double-quotes and other issues related to the conversion from internal database representation to CSV).
@@ -78,11 +89,13 @@ data/icpsr/anonUtilizationReport.csv
 
 ### openICPSR data on deposit sizes (ICPSR, 2023b)
 
-These data are provided by ICPSR staff upon request. They are usually not accessible to others, but could be scraped. Only aggregated statistics are computed from these files. Data file is provided.
+These data are provided by ICPSR staff upon request. They are usually not accessible to others, but could be scraped. Only aggregated statistics are computed from these files. Data file is not provided, as it contains information on unpublished deposits.
 
 ```
 data/icpsr/AEA-2023-Jan-1-through-Nov-28-2023.xlsx
 ```
+
+(not used in 2023 report).
 
 ### Data on processing time (AEA, 2023)
 
@@ -226,6 +239,8 @@ Each R file can be run independently (separate R sessions), in numerical order, 
 
 The script `run_all.sh` is used within a (Linux) shell to implement the above run order, but is optional. 
 
+> The script `11_table1_compliance.R` will fail with error message `Error: Missing noncompliance file data/jira/raw/jira-search-non-compliant.xlsx Execution halted`. In the public deposit, this is expected behavior, and is not critical for any other programs.
+
 To run the registry code, `knit` the `data/registry/Scripts/AEA Annual Report_reproducible.Rmd` file.
 
 #### Using the container
@@ -260,16 +275,17 @@ The registry code was run in an uncontrolled environment with R, but should be r
 
 Table and figure numbers in the paper do not map to program names, due to editorial decisions. The table below maps files, figures/tables, and the programs used to generate them. Some tables contain minor manual formatting edits, indicated by the suffix `_mod`.
 
-| Name of file | Figure/ Table in article | Program to create |
-|--------------|--------------------------|-------------------|
-| jira_response_options_mod.tex | Table 1 | 13_table3_stats.R |
-| n_journal_numbers_mod.tex | Table 2 | 12_table2_stats.R |
-| n_rounds.tex | Table 3 | 14_table4.R |
-| n_webstats.tex | Table 4 | 15_table5_webstats.R |
-| plot_filesize_dist.png | Figure 1 | 21_figure1_filesize.R |
-| n_compliance_manuscript_mod.tex | Table 5 | 11_table1_compliance.R |
-| n_ndas_manuscript_mod.tex | Table 6 | 11_table1_compliance.R |
-| n_updates_manuscript_mod.tex | Table 6 | 04_table1_compliance.R |
+| Name of file | Figure/ Table in article | Program to create | Requires conf. data|
+|--------------|--------------------------|-------------------|--------------------|
+| jira_response_options_mod.tex | Table 1 | 13_table3_stats.R | Yes |
+| n_journal_numbers_mod.tex | Table 2 | 12_table2_stats.R | Yes |
+| n_rounds.tex | Table 3 | 14_table4.R | Yes |
+| n_webstats.tex | Table 4 | 15_table5_webstats.R | Yes |
+| plot_filesize_dist.png | Figure 1 | 21_figure1_filesize.R | Yes |
+| n_compliance_manuscript_mod.tex | Table 5 | 11_table1_compliance.R | No |
+| n_ndas_manuscript_mod.tex | Table 6 | 11_table1_compliance.R | No |
+| n_updates_manuscript_mod.tex | Table 6 | 04_table1_compliance.R | Yes |
+
 
 Registry-related figures are in `data/registry/Output/`:
 
