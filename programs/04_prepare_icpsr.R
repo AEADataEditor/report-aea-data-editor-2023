@@ -13,6 +13,7 @@
 source(here::here("global-libraries.R"),echo=TRUE)
 source(here::here("programs","config.R"),echo=TRUE)
 
+if ( file.exists(icpsr.utilization.file) ) {
 message(paste0("Reading from ",icpsr.utilization.file))
 utilizationReport <- read_csv(file.path(icpsrbase,icpsr.utilization.file)) %>%
   select(Project.ID = "Study ID",
@@ -32,4 +33,11 @@ summary(utilizationReport)
 # we save this filtered file
 saveRDS(utilizationReport,file=file.path(icpsrbase,"anonUtilizationReport.Rds"))
 write_csv(utilizationReport,file=file.path(icpsrbase,"anonUtilizationReport.csv"))
+} else {
+   message(paste0("Skipping anonymization of ",icpsr.utilization.file))
+   message(paste0("Reading from ",file.path(icpsrbase,"anonUtilizationReport.Rds")))
+
+   utilizationReport <- readRDS(file=file.path(icpsrbase,"anonUtilizationReport.Rds"))
+   summary(utilizationReport)
+}
 
