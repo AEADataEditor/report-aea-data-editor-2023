@@ -17,8 +17,8 @@ library(stargazer)
 
 utilizationReport <- readRDS(file=file.path(icpsrbase,"anonUtilizationReport.Rds"))
 
-icpsr.stats.mb <- readRDS(file=file.path(temp,"icpsr.stats.mb.Rds"))
-icpsr.stats.gb <- readRDS(file=file.path(temp,"icpsr.stats.gb.Rds"))
+icpsr.stats.mb <- readRDS(file=file.path(icpsrbase,"icpsr.stats.mb.Rds"))
+icpsr.stats.gb <- readRDS(file=file.path(icpsrbase,"icpsr.stats.gb.Rds"))
 
 webstats <- utilizationReport %>%
   summarize(totalDownloads = sum(Downloads),

@@ -2,10 +2,6 @@
 # Harry Son
 # 2/18/2021
 
-# Inputs
-#   - file.path(jiraanon,"jira.anon.RDS") 
-#   - file.path(temp,"jira.others.RDS)
-# Outputs
 
 
 ### Load libraries 
@@ -16,7 +12,7 @@ source(here::here("programs","config.R"),echo=TRUE)
 # read file back in
 
 
-icpsr.file_size <- readRDS(file=file.path(temp,"icpsr.file.size.Rds"))
+icpsr.file_size <- readRDS(file=file.path(icpsrbase,"icpsr.file.size.Rds"))
 # graph it all
 
 dist_size <- icpsr.file_size %>%

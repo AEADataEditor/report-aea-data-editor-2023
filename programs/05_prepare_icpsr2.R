@@ -20,14 +20,16 @@ library(stargazer)
 # Read in data extracted from openICPSR,
 # This varies from year to year
 
-icpsr.custom <- read_excel(file.path(icpsrbase,icpsr.custom.xlsx)) %>%
-  separate(Created,c("Created.Date","Created.Time"),sep="T") %>%
-  mutate(date=parse_date(Created.Date)) %>%
-  filter(date >= firstday & date <= lastday )
+if (file.exists(file.path(icpsrbase,icpsr.custom.xlsx))) {
+  message(paste0("Reading ",file.path(icpsrbase,icpsr.custom.xlsx)))
+  icpsr.custom <- read_excel(file.path(icpsrbase,icpsr.custom.xlsx)) %>%
+    separate(Created,c("Created.Date","Created.Time"),sep="T") %>%
+    mutate(date=parse_date(Created.Date)) %>%
+    filter(date >= firstday & date <= lastday )
 
-icpsr.actual_lastday <- icpsr.custom %>% 
-  summarize(lastday=max(date)) %>%
-  pull(lastday) %>% as.character()
+  icpsr.actual_lastday <- icpsr.custom %>% 
+    summarize(lastday=max(date)) %>%
+    pull(lastday) %>% as.character()
 
 # QA
 summary(icpsr.custom)
@@ -74,9 +76,19 @@ icpsr.file_size %>%
             q75=round(quantile(filesizemb,0.75),2),
             sum=round(sum(filesizemb),2)) -> icpsr.stats.mb
 
-saveRDS(icpsr.file_size,file=file.path(temp,"icpsr.file.size.Rds"))
-saveRDS(icpsr.stats.mb,file=file.path(temp,"icpsr.stats.mb.Rds"))
-saveRDS(icpsr.stats.gb,file=file.path(temp,"icpsr.stats.gb.Rds"))
+saveRDS(icpsr.file_size,file=file.path(icpsrbase,"icpsr.file.size.Rds"))
+saveRDS(icpsr.stats.mb,file=file.path(icpsrbase,"icpsr.stats.mb.Rds"))
+saveRDS(icpsr.stats.gb,file=file.path(icpsrbase,"icpsr.stats.gb.Rds"))
+
+} else {
+  message(paste0("The file ",file.path(icpsrbase,icpsr.custom.xlsx)," is not available. Reading summary files."))
+  
+  icpsr.file_size <- readRDS(file=file.path(icpsrbase,"icpsr.file.size.Rds"))
+  icpsr.stats.mb  <- readRDS(file=file.path(icpsrbase,"icpsr.stats.mb.Rds"))
+  icpsr.stats.gb  <- readRDS(file=file.path(icpsrbase,"icpsr.stats.gb.Rds"))
+}
+
+# the rest works with the aggregated data.
 
 icpsr.file_size %>% 
   group_by(intfilesize) %>% 
@@ -99,3 +111,4 @@ update_latexnums("pkgsizemedian",icpsr.stats.mb$median)
 update_latexnums("pkgsizeqsvntyfv",icpsr.stats.mb$q75)
 update_latexnums("pkgfilesT",round(icpsr.stats.mb$files/1000,0))
 update_latexnums("pkgfiles",icpsr.stats.mb$files)
+
