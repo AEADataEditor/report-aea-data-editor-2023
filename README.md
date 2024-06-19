@@ -258,7 +258,7 @@ WORKSPACE=$(pwd)
 space=aeadataeditor
 repo=report-aea-data-editor-2023
 tag=2024-06-12
-docker run -it  -v "$WORKSPACE/":/home/rstudio --rm --entrypoint /bin/bash $space/$repo:$tag
+docker run -it  -v "$WORKSPACE/":/home/rstudio -w /home/rstudio --rm --entrypoint /bin/bash $space/$repo:$tag
 ```
 - once at the shell, type
 
