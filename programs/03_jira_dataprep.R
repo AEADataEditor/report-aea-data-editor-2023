@@ -157,13 +157,13 @@ jira.issues.breakout.early <- ji %>%
 
 
 
-if (!file.exists(file.path(temp,"jira.others.xlsx")) ) {
+if (!file.exists(file.path(jiraanon,"jira.others.xlsx")) ) {
   message("Override file not found. Run through this code once, then read instructions.")
-  message(paste0("==== ",file.path(temp,"jira.others.xlsx")," ====="))
+  message(paste0("==== ",file.path(jiraanon,"jira.others.xlsx")," ====="))
   jira.issues.breakout.late <- jira.issues.breakout.early
 } else {
   message("File exists, proceeding.")
-  jira.override <- read_excel(file.path(temp,"jira.others.xlsx"),
+  jira.override <- read_excel(file.path(jiraanon,"jira.others.xlsx"),
                               sheet="override")
   jira.issues.breakout.late <- jira.issues.breakout.early %>%
     left_join(jira.override,by="ticket",suffix = c("",".override")) %>%
@@ -231,14 +231,14 @@ jira.filter.submitted <- jira.pyear %>%
 saveRDS(jira.pyear,file=file.path(temp,"jira.pyear.RDS"))
 saveRDS(jira.filter.submitted,file=file.path(temp,"jira.submitted.RDS"))
 saveRDS(jira.issues.breakout ,file=file.path(temp,"jira.breakout.RDS"))
-saveRDS(jira.others,file=file.path(temp,"jira.others.RDS"))
+saveRDS(jira.others,file=file.path(jiraanon,"jira.others.RDS"))
 
 # this file will be used to revise the flow above. 
 # Copy the sheet "output" to a sheet"override", edit, and then run this code again.
 
-if (file.exists(file.path(temp,"jira.others.xlsx")) ) {
+if (file.exists(file.path(jiraanon,"jira.others.xlsx")) ) {
   message("File found. Preserving overrides, then read instructions.")
-  override <- read_excel(path=file.path(temp,"jira.others.xlsx"),
+  override <- read_excel(path=file.path(jiraanon,"jira.others.xlsx"),
                          sheet="override")
 } else {
   # file doesn't exist, we instantiate the override sheet with the 
@@ -247,7 +247,7 @@ if (file.exists(file.path(temp,"jira.others.xlsx")) ) {
 }
 # now write the file.
   write_xlsx(list(output=jira.others,override=override),
-           path=file.path(temp,"jira.others.xlsx"))
+           path=file.path(jiraanon,"jira.others.xlsx"))
 
 
 # we used the start and end date here, so write them out
