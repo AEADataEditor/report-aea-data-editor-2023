@@ -24,12 +24,15 @@ library(stargazer)
 # ============ THIS IS TEMPORARY AND SHOULD BE HANDLED IN PROCESSING =================
 # The xlsx files are treated as confidential.
 
+flag.processing <- TRUE
+
 if ( file.exists(jira.noncompliance.name) ) {
   jira.noncompliance <- read_excel(jira.noncompliance.name,
                               sheet = 2) 
   message(paste0("File ",jira.noncompliance.name," read"))
 } else {
-  stop(paste0("Missing noncompliance file ",jira.noncompliance.name))
+  message(paste0("Missing noncompliance file ",jira.noncompliance.name))
+  flag.processing <- FALSE
 }
 
 # get the updates. Similar to above, but filter on MCStatus = Update.
@@ -39,7 +42,8 @@ if ( file.exists(jira.updates.name) ) {
                              sheet = 2) 
   message(paste0("File ",jira.updates.name," read"))
 } else {
-  stop(paste0("Missing updates file ",jira.updates.name))
+  message(paste0("Missing updates file ",jira.updates.name))
+  flag.processing <- FALSE
 }
 
 
@@ -50,7 +54,8 @@ if ( file.exists(jira.nda.name) ) {
                              sheet = 2) 
   message(paste0("File ",jira.nda.name," read"))
 } else {
-  stop(paste0("Missing nda file ",jira.nda.name))
+  message(paste0("Missing nda file ",jira.nda.name))
+  flag.processing <- FALSE
 }
 
 
@@ -61,13 +66,16 @@ if ( file.exists(jira.external.name) ) {
                          sheet = 2) 
   message(paste0("File ",jira.external.name," read"))
 } else {
-  stop(paste0("Missing external file ",jira.external.name))
+  message(paste0("Missing external file ",jira.external.name))
+  flag.processing <- FALSE
 }
 
 # Summarize various extra statuses
 
 # For non-compliance and updates, we do not try to unduplicate by MC, since some are
 # pre-Data Editor, and do not have a MC Number.
+if (flag.processing) {
+  message("Confidential files present, continuing.")
 
 jira.noncompliance %>% 
   group_by(`Manuscript Central identifier`) %>%
@@ -190,3 +198,7 @@ external_types %>%
             float = FALSE,
             rownames = FALSE
   )
+
+} else {
+  message("Confidential files missing, skipping.")
+}
