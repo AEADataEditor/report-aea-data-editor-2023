@@ -1,6 +1,6 @@
 
-R version 4.2.2 (2022-10-31) -- "Innocent and Trusting"
-Copyright (C) 2022 The R Foundation for Statistical Computing
+R version 4.2.3 (2023-03-15) -- "Shortstop Beagle"
+Copyright (C) 2023 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -33,8 +33,8 @@ Type 'q()' to quit R.
 
 > ppm.date <- "2023-11-01"
 
-> options(repos = paste0("https://packagemanager.posit.co/cran/", 
-+     ppm.date, "/"))
+> options(repos = c(CRAN = paste0("https://packagemanager.posit.co/cran/__linux__/focal/", 
++     ppm.date)))
 
 > global.libraries <- c("dplyr", "here", "tidyr", "tibble", 
 +     "stringr", "readr", "splitstackshape", "digest", "remotes", 
@@ -84,6 +84,7 @@ The following objects are masked from ‘package:stats’:
     chisq.test, fisher.test
 
 Loading required package: dataverse
+Loading required package: xtable
 
 > pkgTest.github("stargazer", "markwestcott34", "stargazer-booktabs")
 Loading required package: stargazer
@@ -209,9 +210,9 @@ Please cite as:
 +     sessionInfo()
 + }
 > 
-> message(paste0("Reading from ",icpsr.utilization.file))
-Reading from utilizationReport-2023-12-06.csv
-> utilizationReport <- read_csv(file.path(icpsrbase,icpsr.utilization.file)) %>%
+> if ( file.exists(icpsr.utilization.file) ) {
++ message(paste0("Reading from ",icpsr.utilization.file))
++ utilizationReport <- read_csv(file.path(icpsrbase,icpsr.utilization.file)) %>%
 +   select(Project.ID = "Study ID",
 +          Status,
 +          Views,
@@ -223,17 +224,21 @@ Reading from utilizationReport-2023-12-06.csv
 +   filter(Status %in% c("PUBLISHED","NEW VERSION IN PROGRESS","SUBMITTED") ) %>%
 +   mutate(is_published = (Views >0),
 +          as.of.date   = icpsr.utilization.date)
-Rows: 5303 Columns: 7
-── Column specification ────────────────────────────────────────────────────────
-Delimiter: ","
-chr  (3): Project Name, Status, Depositor Email
-dbl  (3): Study ID, Views, Download
-dttm (1): Updated Date
-
-ℹ Use `spec()` to retrieve the full column specification for this data.
-ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
-> 
-> summary(utilizationReport)
++ 
++ summary(utilizationReport)
++ 
++ # we save this filtered file
++ saveRDS(utilizationReport,file=file.path(icpsrbase,"anonUtilizationReport.Rds"))
++ write_csv(utilizationReport,file=file.path(icpsrbase,"anonUtilizationReport.csv"))
++ } else {
++    message(paste0("Skipping anonymization of ",icpsr.utilization.file))
++    message(paste0("Reading from ",file.path(icpsrbase,"anonUtilizationReport.Rds")))
++ 
++    utilizationReport <- readRDS(file=file.path(icpsrbase,"anonUtilizationReport.Rds"))
++    summary(utilizationReport)
++ }
+Skipping anonymization of utilizationReport-2023-12-06.csv
+Reading from /home/rstudio/data/icpsr/anonUtilizationReport.Rds
    Project.ID        Status              Views           Downloads      
  Min.   :109703   Length:4937        Min.   :    0.0   Min.   :   0.00  
  1st Qu.:113478   Class :character   1st Qu.:  402.0   1st Qu.:  21.00  
@@ -256,11 +261,7 @@ dttm (1): Updated Date
                    
                    
 > 
-> # we save this filtered file
-> saveRDS(utilizationReport,file=file.path(icpsrbase,"anonUtilizationReport.Rds"))
-> write_csv(utilizationReport,file=file.path(icpsrbase,"anonUtilizationReport.csv"))
-> 
 > 
 > proc.time()
    user  system elapsed 
-  1.377   1.521   1.471 
+  1.139   0.160   1.262 

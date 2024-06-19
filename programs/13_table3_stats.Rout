@@ -1,6 +1,6 @@
 
-R version 4.2.2 (2022-10-31) -- "Innocent and Trusting"
-Copyright (C) 2022 The R Foundation for Statistical Computing
+R version 4.2.3 (2023-03-15) -- "Shortstop Beagle"
+Copyright (C) 2023 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -33,8 +33,8 @@ Type 'q()' to quit R.
 
 > ppm.date <- "2023-11-01"
 
-> options(repos = paste0("https://packagemanager.posit.co/cran/", 
-+     ppm.date, "/"))
+> options(repos = c(CRAN = paste0("https://packagemanager.posit.co/cran/__linux__/focal/", 
++     ppm.date)))
 
 > global.libraries <- c("dplyr", "here", "tidyr", "tibble", 
 +     "stringr", "readr", "splitstackshape", "digest", "remotes", 
@@ -285,4 +285,4 @@ Adding missing grouping variables: `response`
 > 
 > proc.time()
    user  system elapsed 
-  1.311   1.464   1.170 
+  1.455   0.173   1.759 

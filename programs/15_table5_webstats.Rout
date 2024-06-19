@@ -1,6 +1,6 @@
 
-R version 4.2.2 (2022-10-31) -- "Innocent and Trusting"
-Copyright (C) 2022 The R Foundation for Statistical Computing
+R version 4.2.3 (2023-03-15) -- "Shortstop Beagle"
+Copyright (C) 2023 The R Foundation for Statistical Computing
 Platform: x86_64-pc-linux-gnu (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -32,8 +32,8 @@ Type 'q()' to quit R.
 
 > ppm.date <- "2023-11-01"
 
-> options(repos = paste0("https://packagemanager.posit.co/cran/", 
-+     ppm.date, "/"))
+> options(repos = c(CRAN = paste0("https://packagemanager.posit.co/cran/__linux__/focal/", 
++     ppm.date)))
 
 > global.libraries <- c("dplyr", "here", "tidyr", "tibble", 
 +     "stringr", "readr", "splitstackshape", "digest", "remotes", 
@@ -83,6 +83,7 @@ The following objects are masked from ‘package:stats’:
     chisq.test, fisher.test
 
 Loading required package: dataverse
+Loading required package: xtable
 
 > pkgTest.github("stargazer", "markwestcott34", "stargazer-booktabs")
 Loading required package: stargazer
@@ -213,8 +214,8 @@ Please cite as:
 > 
 > utilizationReport <- readRDS(file=file.path(icpsrbase,"anonUtilizationReport.Rds"))
 > 
-> icpsr.stats.mb <- readRDS(file=file.path(temp,"icpsr.stats.mb.Rds"))
-> icpsr.stats.gb <- readRDS(file=file.path(temp,"icpsr.stats.gb.Rds"))
+> icpsr.stats.mb <- readRDS(file=file.path(icpsrbase,"icpsr.stats.mb.Rds"))
+> icpsr.stats.gb <- readRDS(file=file.path(icpsrbase,"icpsr.stats.gb.Rds"))
 > 
 > webstats <- utilizationReport %>%
 +   summarize(totalDownloads = sum(Downloads),
@@ -347,7 +348,7 @@ Adding new row for field zenodototalFiles
 + )
 
 % Table created by stargazer v.5.2 by Marek Hlavac, Harvard University. E-mail: hlavac at fas.harvard.edu
-% Date and time: Mon, Dec 11, 2023 - 09:06:39 PM
+% Date and time: Wed, Jun 19, 2024 - 12:16:48 PM
 \begin{tabular}{@{\extracolsep{5pt}} ccccccc} 
 \toprule 
 Repository & Published & Downloads & Views & Uploads & Files & Size (GB) \\ 
@@ -359,4 +360,4 @@ Zenodo & 11 & 8,208 & 1,504 & 3 & 6,165 & 373.09 \\
 > 
 > proc.time()
    user  system elapsed 
-  1.458   1.475   1.525 
+  1.996   0.183   2.384 
