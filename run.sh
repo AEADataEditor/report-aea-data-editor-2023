@@ -5,7 +5,7 @@ PWD=$(pwd)
 . ${PWD}/.myconfig.sh
 tag=${1:-2024-06-12}
 case $USER in
-  codespace)
+  codespaceX)
   WORKSPACE=/workspaces
   ;;
   *)
@@ -17,4 +17,4 @@ esac
 
 docker pull $space/$repo:$tag
 
-docker run -v $WORKSPACE:/home/rstudio --entrypoint="/bin/bash" -w /home/rstudio/programs -t --rm $space/$repo:$tag ./run_all.sh
+docker run -v $WORKSPACE:/home/rstudio --entrypoint="/bin/bash" -w /home/rstudio/programs -t --rm $space/$repo:$tag  ./run_all.sh
