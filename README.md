@@ -17,18 +17,18 @@ The deposit at [http://doi.org/10.3886/E198444V1](http://doi.org/10.3886/E198444
 
 ## Citing the report
 
-> Vilhuber, Lars. 2024. "Report by the AEA Data Editor." AEA Papers and Proceedings. []()
+> Vilhuber, Lars. 2024. "Report by the AEA Data Editor." AEA Papers and Proceedings. 114: 878–90. DOI: [10.1257/pandp.114.878](https://doi.org/10.1257/pandp.114.878)
 
 ```
 @article{ReportDE2024,
 Author = {Vilhuber, Lars},
 Title = {Report by the {AEA} Data Editor},
 Journal = {AEA Papers and Proceedings},
-Volume = {},
+Volume = {114},
 Year = {2024,
-Month = {},
-Pages = {},
-DOI = {},
+Month = {May},
+Pages = {878–90},
+DOI = {10.1257/pandp.114.878},
 URL = {}}
 ```
 
